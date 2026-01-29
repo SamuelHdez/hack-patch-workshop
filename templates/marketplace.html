@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Tebasaenterar - Fantasy Market Screen</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    fetch('../static/marketplace.json')
+      .then(response => response.json())
+      .then(eventos => {
+        const contenedor = document.getElementById('items-list');
+        contenedor.innerHTML = eventos.map(item => {
+          //     return `
+          //   <div class="event-card" id="${evento.id}">
+          //     <img src="${evento.img}" alt="${evento.alt}">
+          //     <h3>${evento.title}</h3>
+          //       <p>${evento.city}${evento.date ? ' - ' + evento.date : ''}</p>
+          //       <p>${evento.venue || ''}</p>
+          //     <a href="${evento.url}" ${isBlank ? 'target="_blank" rel="noopener noreferrer"' : ''} class="event-link-btn">
+          //       ${evento.button}
+          //     </a>
+          //   </div>
+          // `;
+          return `
+          <div id="${item.id}" class="bg-light-gray bureaucratic-border p-6 flex flex-col gap-4 relative">
+           
+            <div class="flex gap-4">
+              <div class="w-24 h-24 bg-pure-white border-2 border-deep-blue grayscale"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr"); background-size: cover;'>
+              </div>
+              <div class="flex flex-col justify-center">
+                <h3 class="text-xl font-black uppercase">${item.title}</h3>
+                <p class="text-xs font-bold uppercase text-dark-gray">${item.category}</p>
+              </div>
+            </div>
+            <div class="border-t-2 border-deep-blue pt-4 mt-2">
+              <div class="flex justify-between items-center mb-4">
+                <div>
+                  <p class="text-[10px] font-black uppercase opacity-60">Precio</p>
+                    <p class="text-2xl font-black">€${parseFloat(item.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
+                <div class="text-right">
+                  <div
+                    class="bg-bright-blue text-pure-white text-[10px] font-black px-2 py-1 border border-deep-blue">
+                    ${item.badge}</div>
+                </div>
+              </div>
+                <a href="/checkout?eventId=${item.id}"
+                class="w-full h-12 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:bg-deep-blue transition-colors flex items-center justify-center">
+                 Comprar
+                </a>
+            </div>
+          </div>
+        `;
+        }).join('');
+      })
+      .catch(error => {
+        console.error('Error cargando los eventos:', error);
+        document.getElementById('items-list').innerHTML = '<p>Error cargando los eventos.</p>';
+      });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "dark-gray": "#515455",
+            "deep-blue": "#033778",
+            "light-gray": "#b1b0b1",
+            "bright-blue": "#00aadb",
+            "pure-white": "#ffffff",
+          },
+          fontFamily: {
+            "display": ["Lexend"]
+          },
+          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #ffffff;
+            color: #033778;
+        }
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #033778;
+            color: #ffffff;
+            padding: 12px 0;
+            position: fixed;
+            bottom: 0;
+            z-index: 50;
+            border-top: 4px solid #00aadb;
+        }
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: ticker 45s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        input::placeholder {
+            color: #033778 !important;
+            opacity: 0.7;
+        }
+        .bureaucratic-border {
+            border: 4px solid #033778;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-pure-white text-deep-blue">
+  <header
+    class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-20 lg:px-40 py-4">
+    <div class="flex items-center justify-between whitespace-nowrap">
+      <div class="flex items-center gap-8">
+        <a href="/">
+          <div class="flex items-center gap-4 text-deep-blue">
+            <div class="size-8">
+              <span class="material-symbols-outlined text-4xl">sports_soccer</span>
+            </div>
+            <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
+              Tebasaenterar
+            </h2>
+          </div>
+        </a>
+        <nav class="hidden lg:flex items-center gap-9">
+          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+            href="/">Boletín Oficial</a>
+          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+            href="/marketplace">Mercado de Palancas</a>
+        </nav>
+      </div>
+      <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
+        {% if user %}
+        <a href="/dashboard"
+          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
+          <span class="truncate">Expediente: #{{user}}</span>
+        </a>
+        {% else %}
+        <a href="/login"
+          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
+          <span class="truncate">Iniciar Sesión</span>
+        </a>
+        {% endif %}
+
+      </div>
+    </div>
+  </header>
+  <main class="max-w-[1400px] mx-auto pb-32 pt-10 px-4">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex-grow">
+        <div class="mb-8 border-b-8 border-deep-blue pb-4">
+          <h1 class="text-5xl font-black uppercase tracking-tighter">Mercado de Activos Financieros</h1>
+          <p class="text-sm font-bold uppercase mt-2 opacity-80">Circular 44/2024 - Registro de Inscripciones
+            Pendientes
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="items-list">
+
+          <!-- <div class="bg-light-gray bureaucratic-border p-6 flex flex-col gap-4 relative">
+            <div
+              class="absolute top-4 right-4 bg-bright-blue text-pure-white text-[10px] font-black px-2 py-1 border border-deep-blue">
+              PENDING INSCRIPTION</div>
+            <div class="flex gap-4">
+              <div class="w-24 h-24 bg-pure-white border-2 border-deep-blue grayscale"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr"); background-size: cover;'>
+              </div>
+              <div class="flex flex-col justify-center">
+                <h3 class="text-xl font-black uppercase">Activo #001: Mediocentro Creativo</h3>
+                <p class="text-xs font-bold uppercase text-dark-gray">Nivel Contabilidad Creativa: Experto</p>
+              </div>
+            </div>
+            <div class="border-t-2 border-deep-blue pt-4 mt-2">
+              <div class="flex justify-between items-center mb-4">
+                <div>
+                  <p class="text-[10px] font-black uppercase opacity-60">Valoración de Deuda</p>
+                  <p class="text-2xl font-black">€85.5M <span class="text-sm font-medium">Millions of Debt</span></p>
+                </div>
+                <div class="text-right">
+                  <p class="text-[10px] font-black uppercase opacity-60">Amortización CVC</p>
+                  <p class="text-lg font-black text-bright-blue">32% Anual</p>
+                </div>
+              </div>
+              <button
+                class="w-full h-12 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:bg-deep-blue transition-colors">
+                Añadir a la Deuda
+              </button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="mx-6 font-black uppercase text-bright-blue">[ALERTA]</span> DEUDA TOTAL DE LA LIGA SUPERANDO EL PIB
+      DE VARIOS PAÍSES...
+      <span class="mx-6 font-black uppercase text-bright-blue">[NOTIFICACIÓN]</span> REUNIÓN A MEDIANOCHE PARA CAMBIAR
+      LAS REGLAS DE INSCRIPCIÓN...
+      <span class="mx-6 font-black uppercase text-bright-blue">[CVC]</span> DINERO GRATIS* (*SUJETO A 50 AÑOS DE
+      ARREPENTIMIENTO)...
+      <span class="mx-6 font-black uppercase text-bright-blue">[VAR]</span> SE CONFIRMA QUE EL FUERA DE JUEGO SE MIDE
+      POR EL TAMAÑO DE LA NÓMINA...
+      <span class="mx-6 font-black uppercase text-bright-blue">[CONTABLE]</span> LAS PALANCAS AHORA SE CONSIDERAN
+      GIMNASIA OLÍMPICA FINANCIERA...
+    </div>
+  </div>
+
+</body>
+
+</html>

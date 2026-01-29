@@ -68,6 +68,11 @@ def admin():
     # Este endpoint no debería estar accesible en producción
     return render_template('admin.html')
 
+@app.route('/marketplace')
+def marketplace():
+    user = request.cookies.get('user')
+    return render_template('marketplace.html', user=user)
+
 AVATAR_FILE = 'avatars.json'
 
 def load_avatars():

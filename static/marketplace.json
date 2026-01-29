@@ -1,0 +1,142 @@
+[
+    {
+        "id": 654561,
+        "slug": "palanca-financiera-premium",
+        "category": "Palancas",
+        "title": "Palanca Financiera 'Humo Blanco'",
+        "description": "Vende el 49% de tu dignidad y los derechos de imagen de los nietos de tus socios a un fondo de inversión de las Islas Caimán.",
+        "price": 400000000,
+        "image": "https://img.ejemplo.com/palanca.jpg",
+        "badge": "Más vendido"
+    },
+    {
+        "id": 882342,
+        "slug": "penalti-madrid-minuto-95",
+        "category": "Arbitraje V.I.P.",
+        "title": "Penalti 'Contacto Fantasma'",
+        "description": "Garantiza una caída estética en el área en el tiempo de descuento. Incluye revisión de VAR de 5 minutos grabada con un Nokia 3310.",
+        "price": 12000000,
+        "image": "https://img.ejemplo.com/penalti.jpg",
+        "badge": "Efecto Bernabéu"
+    },
+    {
+        "id": 129034,
+        "slug": "derechos-cvc-perpetuos",
+        "category": "Hipotecas",
+        "title": "Contrato CVC 'Pan para hoy...'",
+        "description": "Dinero rápido para fichar a un extremo cojo a cambio de hipotecar los derechos de televisión del club hasta el año 2075.",
+        "price": 1900000000,
+        "image": "https://img.ejemplo.com/hipoteca.jpg",
+        "badge": "Plan Impulso"
+    },
+    {
+        "id": 445566,
+        "slug": "horario-lunes-infierno",
+        "category": "Audiencias",
+        "title": "Pack Lunes a las 21:00h",
+        "description": "El horario favorito de la familia trabajadora. Asegura que nadie pueda ir al estadio y que la audiencia se concentre en bares de Singapur.",
+        "price": 0,
+        "image": "https://img.ejemplo.com/reloj.jpg",
+        "badge": "Gratis (para los chinos)"
+    },
+    {
+        "id": 778899,
+        "slug": "supercopa-arabia-express",
+        "category": "Exportación",
+        "title": "Billete de Ida a Riad",
+        "description": "Traslada tu competición local a 5.000km de distancia. Incluye fans de alquiler con camisetas mal falsificadas y 0% de ambiente futbolero.",
+        "price": 40000000,
+        "image": "https://img.ejemplo.com/desierto.jpg",
+        "badge": "Fútbol Global"
+    },
+    {
+        "id": 332211,
+        "slug": "var-lines-paint",
+        "category": "Arbitraje V.I.P.",
+        "title": "Líneas de VAR 'Grosor Variable'",
+        "description": "Servicio de trazado de líneas de fuera de juego con un pincel de 50px de ancho. Si no entra, la empujamos con el ratón.",
+        "price": 250000,
+        "image": "https://img.ejemplo.com/var-lines.jpg",
+        "badge": "Geometría Creativa"
+    },
+    {
+        "id": 101010,
+        "slug": "fichaje-sin-inscribir",
+        "category": "Gestión",
+        "title": "Fichaje Estrella (No Inscribible)",
+        "description": "Compra a un crack mundial para que se pase 6 meses entrenando en el gimnasio porque te sobran 2 euros de límite salarial.",
+        "price": 85000000,
+        "image": "https://img.ejemplo.com/crack.jpg",
+        "badge": "Fair Play Style"
+    },
+    {
+        "id": 998877,
+        "slug": "querella-preventiva-superliga",
+        "category": "Legal",
+        "title": "Pack 5 Querellas 'Anti-Florentino'",
+        "description": "Un lote de demandas redactadas por abogados expertos en estirar el chicle legal. Ideales para frenar cualquier intento de mejorar el fútbol sin permiso de la Liga.",
+        "price": 1500000,
+        "image": "https://img.ejemplo.com/demanda.jpg",
+        "badge": "Prioridad Judicial"
+    },
+    {
+        "id": 223344,
+        "slug": "catering-palco-oro",
+        "category": "Gestión",
+        "title": "Derechos del Canapé de Gambas",
+        "description": "Vende el 25% de los beneficios del catering del palco V.I.P. durante los próximos 15 años para poder inscribir al tercer portero.",
+        "price": 500000,
+        "image": "https://img.ejemplo.com/catering.jpg",
+        "badge": "Palanca Sabrosa"
+    },
+    {
+        "id": 554433,
+        "slug": "micros-ambiente-falso",
+        "category": "Audiencias",
+        "title": "Sinfonía 'Estadio Lleno' (MP3)",
+        "description": "Audio en alta fidelidad de cánticos y aplausos para tapar los pitos del público real. Incluye el extra 'Gritos de alegría' al ver el logo de un patrocinador.",
+        "price": 75000,
+        "image": "https://img.ejemplo.com/audio.jpg",
+        "badge": "Magia Sonora"
+    },
+    {
+        "id": 112211,
+        "slug": "clausula-miedo-premium",
+        "category": "Contratos",
+        "title": "Cláusula del Miedo 'Full HD'",
+        "description": "Evita que el jugador que has cedido te meta un gol y te deje en ridículo. Si el jugador se acerca al área, recibe una descarga eléctrica en las espinilleras.",
+        "price": 2000000,
+        "image": "https://img.ejemplo.com/clausula.jpg",
+        "badge": "Cobardía Asegurada"
+    },
+    {
+        "id": 909090,
+        "slug": "limite-salarial-elastico",
+        "category": "Finanzas",
+        "title": "Algoritmo de Límite Salarial 'Gummy'",
+        "description": "Un software que hace que tu límite salarial se estire o se encoja mágicamente dependiendo de lo bien que te lleves con la directiva de la patronal.",
+        "price": 9999999,
+        "image": "https://img.ejemplo.com/limite.jpg",
+        "badge": "Matemática Creativa"
+    },
+    {
+        "id": 808080,
+        "slug": "viaje-miami-oficial",
+        "category": "Exportación",
+        "title": "Gira 'Jugar en Miami porque sí'",
+        "description": "Un Girona-Getafe en Florida a las 4 de la mañana. Incluye un perrito caliente de 20 dólares y la pérdida total del jet lag para toda la plantilla.",
+        "price": 10000000,
+        "image": "https://img.ejemplo.com/miami.jpg",
+        "badge": "American Dream"
+    },
+    {
+        "id": 707070,
+        "slug": "var-off-switch",
+        "category": "Arbitraje V.I.P.",
+        "title": "Botón 'Apagar monitor VAR'",
+        "description": "Permite que el árbitro ignore la pantalla justo cuando hay una agresión clarísima. Incluye la excusa oficial: 'Se ha ido el WiFi en la sala'.",
+        "price": 5000000,
+        "image": "https://img.ejemplo.com/var-off.jpg",
+        "badge": "Paz Visual"
+    }
+]
