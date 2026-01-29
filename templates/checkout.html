@@ -115,13 +115,14 @@
       <span>/</span>
       <a class="opacity-50 hover:opacity-100" href="#">Activos Financieros</a>
       <span>/</span>
-      <span class="text-bright-blue" id="item-id"></span>
+      <span class="text-bright-blue" id="item-id">ID-ACTIVO_{{ "%03d" | format(item.id) }}</span>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div class="lg:col-span-4">
         <div class="relative bureaucratic-border bg-light-gray aspect-[3/4] overflow-hidden grayscale group">
-          <div id="item-image" class="w-full h-full bg-cover bg-center">
-          </div>         
+          <div id="item-image" class="w-full h-full bg-cover bg-center"
+            style="background-image: url('{{ item.image }}');">
+          </div>
           <div class="absolute bottom-0 left-0 right-0 bg-deep-blue p-4 text-pure-white">
             <p class="text-xl font-black" id="item-badge"></p>
           </div>
@@ -130,25 +131,26 @@
       </div>
       <div class="lg:col-span-5 flex flex-col gap-8">
         <div class="border-b-8 border-deep-blue pb-4">
-          <h1 class="text-5xl font-black uppercase tracking-tighter" id="item-title"></h1>
-          <p class="text-lg font-bold text-bright-blue uppercase" id="item-category"></p>
+          <h1 class="text-5xl font-black uppercase tracking-tighter">{{ item.title }}</h1>
+          <p class="text-lg font-bold text-bright-blue uppercase">Categoría: {{ item.category }}</p>
         </div>
         <div class="grid grid-cols-1 gap-4">
           <h3 class="text-xs font-black uppercase bg-deep-blue text-pure-white px-3 py-1 w-fit">Descripción</h3>
           <div class="flex flex-col gap-6 bg-light-gray/20 p-6 bureaucratic-border">
-            <p class="text-sm font-bold leading-tight" id="item-description">
-            </p>
+            <p class="text-sm font-bold leading-tight">{{ item.description }}</p>
           </div>
         </div>
         <div class="flex flex-col gap-4">
           <h3 class="text-xs font-black uppercase bg-deep-blue text-pure-white px-3 py-1 w-fit">Precio</h3>
           <div class="border-l-4 border-deep-blue ml-2 pl-6 py-2 flex flex-col gap-2">
-            <p class="text-4xl font-black text-bright-blue" id="item-price"></p>
+            <p class="text-4xl font-black text-bright-blue">
+              {{ "{:,.2f}".format(item.price).replace(',', 'X').replace('.', ',').replace('X', '.') }}€
+            </p>
             <p class="text-xs font-bold uppercase text-dark-gray">Precio por unidad de palanca</p>
           </div>
         </div>
       </div>
-      <div class="lg:col-span-3"> 
+      <div class="lg:col-span-3">
         <aside class="sticky top-28 flex flex-col gap-6">
           {% if user %}
           <form id="checkout-form" onsubmit="return false;">
@@ -162,12 +164,15 @@
                   <label class="text-[10px] font-black uppercase">Cantidad (Máximo 8)</label>
                   <input type="number" id="cantidad" name="cantidad" min="1" max="8" value="1" required>
                 </div>
-                <div class="mt-4 p-4 bg-deep-blue text-pure-white">
-                  <p class="text-[10px] font-black uppercase mb-1 opacity-70">Cuota de Deuda Mensual:</p>
-                  <p class="text-2xl font-black" id="monthly-payment"></p>
-                  <p class="text-[8px] font-bold mt-2 uppercase">*Sujeto a que el presidente no se levante de mal humor.
+                <div class="flex flex-col gap-1">
+                  <label class="text-[10px] font-black uppercase">Precio Total</label>
+                  <div class="p-3 bg-light-gray/20 border-2 border-deep-blue">
+                  <p class="text-xl font-black text-bright-blue" id="total-price">
+                    {{ "{:,.2f}".format(item.price).replace(',', 'X').replace('.', ',').replace('X', '.') }}€
                   </p>
+                  </div>
                 </div>
+              
                 <button type="submit"
                   class="w-full py-4 mt-2 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778]">
                   Aplicar palanca
@@ -248,13 +253,12 @@
 
     let currentItem = null;
 
-    // Función para actualizar el pago mensual
-    function updateMonthlyPayment() {
+    function updatePrice() {
       if (!currentItem) return;
 
       const cantidadInput = document.getElementById('cantidad');
       if (!cantidadInput) return;
-      
+
       let cantidad = parseInt(cantidadInput.value) || 1;
 
       // Validar máximo
@@ -269,119 +273,74 @@
         cantidadInput.value = 1;
       }
 
-      const monthlyPayment = currentItem.price * cantidad;
-
-      const monthlyPaymentElement = document.getElementById('monthly-payment');
-      if (monthlyPaymentElement) {
-        monthlyPaymentElement.textContent = '€' + monthlyPayment.toLocaleString();
+      const totalPrice = currentItem.price * cantidad;
+      const totalPriceElement = document.getElementById('total-price');
+      if (totalPriceElement) {
+        totalPriceElement.textContent = '€' + totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
     }
 
-    // Cargar el archivo marketplace.json
-    fetch('../static/marketplace.json')
-      .then(response => response.json())
-      .then(data => {
-        // Buscar el item por su id
-        const item = data.find(product => product.id === itemId);
+    // Establecer currentItem desde los datos de Jinja
+    currentItem = {
+      id: parseInt("{{ item.id }}"),
+      title: "{{ item.title }}",
+      category: "{{ item.category }}",
+      description: "{{ item.description }}",
+      price: parseFloat("{{ item.price }}"),
+      badge: "{{ item.badge }}",
+      image: "{{ item.image }}"
+    };
 
-        if (item) {
-          currentItem = item;
+    console.log('Item actual:', currentItem);
+    updatePrice();
 
-          // Actualizar el título
-          const titleElement = document.getElementById('item-title');
-          if (titleElement) {
-            titleElement.textContent = item.title;
-          }
-
-          const categoryElement = document.getElementById('item-category');
-          if (categoryElement) {
-            categoryElement.textContent = 'Categoría: ' + item.category;
-          }
-
-          const descriptionElement = document.getElementById('item-description');
-          if (descriptionElement) {
-            descriptionElement.textContent = item.description;
-          }
-
-          const priceElement = document.getElementById('item-price');
-          if (priceElement) {
-            priceElement.textContent = '€' + item.price.toLocaleString();
-          }
-
-          const badgeElement = document.getElementById('item-badge');
-          if (badgeElement) {
-            badgeElement.textContent = item.badge;
-          }
-
-          const idElement = document.getElementById('item-id');
-          if (idElement) {
-            idElement.textContent = 'ID-ACTIVO_' + String(item.id).padStart(3, '0');
-          }
-
-          const imageElement = document.getElementById('item-image');
-          if (imageElement) {
-            imageElement.style.backgroundImage = `url('${item.image}')`;
-          }
-
-          // Actualizar el pago mensual inicial (solo si existe el formulario)
-          updateMonthlyPayment();
-
-          // Agregar listener para cambios en cantidad (solo si existe el formulario)
-          const cantidadInput = document.getElementById('cantidad');
-          if (cantidadInput) {
-            cantidadInput.addEventListener('input', updateMonthlyPayment);
-          }
-
-          // Agregar listener al formulario (solo si existe)
-          const checkoutForm = document.getElementById('checkout-form');
-          if (checkoutForm) {
-            checkoutForm.addEventListener('submit', function (e) {
-              e.preventDefault();
-
-              // Serializa los datos del formulario a un objeto JS
-              const formData = new FormData(this);
-              const cart = {};
-              formData.forEach((value, key) => { cart[key] = value; });
-              cart['user'] = '{{ user }}';
-              cart['item_price'] = currentItem ? currentItem.price : 0;
-              cart['total_price'] = (currentItem.price * parseInt(formData.get('cantidad') || 1));
-
-              // Opcional: añade info de eventoId si quieres
-              cart['id'] = itemId;
-              console.log('Carrito a enviar:', cart);
-              fetch('/save_cart', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded', // así lo espera Flask
-                },
-                body: `cart=${encodeURIComponent(JSON.stringify(cart))}`
-              })
-                .then(res => res.text())
-                .then(msg => {
-                  document.getElementById('mensaje').innerHTML = "Entradas añadidas al carrito. Redirigiendo...";
-                  document.getElementById('mensaje').style.display = 'block';
-                  setTimeout(() => {
-                    document.getElementById('mensaje').style.display = 'none';
-                    window.location.href = '/cart'; // <--- Aquí va la redirección
-                  }, 3000);
-                })
-                .catch((err) => {
-                  console.error('Error al guardar el carrito:', err);
-                  document.getElementById('mensaje').innerHTML = "Error al guardar el carrito";
-                  document.getElementById('mensaje').style.display = 'block';
-                });
-            });
-          }
-
-        } else {
-          console.error('Item no encontrado con id:', itemId);
+    const cantidadInput = document.getElementById('cantidad');
+    if (cantidadInput) {
+      cantidadInput.addEventListener('input', updatePrice);
+      
+      // Prevenir envío del formulario al presionar Enter
+      cantidadInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
         }
-      })
-      .catch(error => {
-        console.error('Error al cargar marketplace.json:', error);
       });
+    }
+
+    // Agregar listener al formulario (solo si existe)
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Serializa los datos del formulario a un objeto JS
+        const formData = new FormData(this);
+        const cart = {};
+        formData.forEach((value, key) => { cart[key] = value; });
+        cart['user'] = '{{ user }}';
+        cart['item_price'] = currentItem ? currentItem.price : 0;
+        cart['total_price'] = (currentItem.price * parseInt(formData.get('cantidad') || 1));
+
+        // Opcional: añade info de eventoId si quieres
+        cart['id'] = itemId;
+        fetch('/save_cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded', // así lo espera Flask
+          },
+          body: `cart=${encodeURIComponent(JSON.stringify(cart))}`
+        })
+          .then(res => res.text())
+          .then(msg => {
+            setTimeout(() => {
+              window.location.href = '/cart'; // <--- Aquí va la redirección
+            }, 1000);
+          })
+          .catch((err) => {
+            console.error('Error al guardar el carrito:', err);
+          });
+      });
+    }
+
   </script>
-
 </body>
-
 </html>

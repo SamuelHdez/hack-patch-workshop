@@ -8,3 +8,4 @@ services:
       - .:/app  # Esto permite ver cambios en vivo sin reconstruir (ideal para desarrollo)
     environment:
       - FLASK_ENV=development
+      - DATABASE_URL=tebasaenterar.db

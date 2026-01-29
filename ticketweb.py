@@ -1,27 +1,39 @@
 # TicketNow - Entorno vulnerable para Hack & Patch
 
-from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response
+from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response, g
 import json, os
 import pickle
+import sqlite3
 import requests
 
 app = Flask(__name__)
-
+DATABASE = 'tebasaenterar.db'
 # Variable de entorno para simular modo desarrollo/producción
 ENV = os.environ.get('APP_ENV', 'dev')
 
 # Base de datos en memoria
-users = {
-    'admin': 'admin',
-    'samuel': 'samuel',
-    'soto': 'soto'
-}
+
 sessions = {}
 events = [
      {'id': 1, 'title': 'Concierto Bad Bunny 2025', 'image': 'https://via.placeholder.com/150'},
     {'id': 2, 'title': 'AC/DC', 'image': 'https://via.placeholder.com/150'},
     {'id': 3, 'title': 'Codemotion 2025', 'image': 'https://via.placeholder.com/150'}
 ]
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        # Conectamos a la base de datos que creaste manualmente
+        db = g._database = sqlite3.connect(DATABASE)
+        # Esto permite acceder a las columnas por nombre: user['username'] en vez de user[1]
+        db.row_factory = sqlite3.Row
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 @app.route('/')
 def home():
@@ -31,21 +43,52 @@ def home():
 @app.route('/checkout')
 def checkout():
     user = request.cookies.get('user')
-    return render_template('checkout.html', events=events, user=user)
+    item_id = request.args.get('id')
+    
+    if not item_id:
+        return redirect(url_for('marketplace'))
+    
+    db = get_db()
+    # VULNERABILIDAD SQLi: Ideal para el workshop. 
+    # Un ID malicioso podría saltarse filtros o extraer datos.
+    query = f"SELECT * FROM products WHERE id = {item_id}"
+    
+    try:
+        item = db.execute(query).fetchone()
+        if not item:
+            return "Activo financiero no encontrado en el registro de Tebas.", 404
+            
+        return render_template('checkout.html', item=item, user=user)
+    except Exception as e:
+        return f"Error en la auditoría: {e}"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    user = request.cookies.get('user')
-    if user:
+    user_cookie = request.cookies.get('user')
+    if user_cookie:
         return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
-        user = request.form['username']
-        pwd = request.form['password']
-        if user in users and users[user] == pwd:
-            resp = make_response(redirect(url_for('dashboard')))
-            resp.set_cookie('user', user)
-            return resp
-        return 'Login incorrecto'
+        username = request.form['username']
+        password = request.form['password']
+        
+        db = get_db()
+        
+        # VULNERABILIDAD CRÍTICA: SQL Injection
+        # Usamos f-strings para que el input del usuario vaya directo a la query
+        query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+        
+        try:
+            user = db.execute(query).fetchone()
+            if user:
+                resp = make_response(redirect(url_for('dashboard')))
+                resp.set_cookie('user', user['username'])
+                return resp
+            else:
+                return 'Login incorrecto (Tebas no te deja pasar)'
+        except Exception as e:
+            return f"Error en la consulta: {e}<br>Query ejecutada: {query}"
+            
     return render_template('login.html')
 
 @app.route('/logout')
@@ -71,7 +114,12 @@ def admin():
 @app.route('/marketplace')
 def marketplace():
     user = request.cookies.get('user')
-    return render_template('marketplace.html', user=user)
+    db = get_db()
+    
+    # Traemos todos los productos ordenados por precio (de más caro a menos caro)
+    products = db.execute('SELECT * FROM products ORDER BY price DESC').fetchall()
+    
+    return render_template('marketplace.html', user=user, products=products)
 
 AVATAR_FILE = 'avatars.json'
 
