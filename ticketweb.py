@@ -172,6 +172,13 @@ def load_cart():
     except Exception as e:
         print(e)
         return "Error al cargar carrito"
+    
+@app.route('/api/var-randomizer')
+def var_randomizer():
+    db = get_db()
+    # Obtenemos un escándalo aleatorio de la base de datos
+    scandal = db.execute('SELECT * FROM var_scandals ORDER BY RANDOM() LIMIT 1').fetchone()
+    return jsonify(dict(scandal))
 
 @app.route('/debug')
 def debug():
