@@ -120,15 +120,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div class="lg:col-span-4">
         <div class="relative bureaucratic-border bg-light-gray aspect-[3/4] overflow-hidden grayscale group">
-          <div class="w-full h-full bg-cover bg-center"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCrAPLHWQpOF3Nde-YWDO3Ju13Mk56-t5w0Q9WvbRqkeCMLaM0cEGQZmcoTdvind8C90qZ553rpdtxP_kYP7GiitKqWETpHP36UVqWcnsBl8A6YRFbEjv1LIHYS7OVTjtd0SJho1XsV1LnbK8-476kK03EpQQ_tevvzUyIFzmcLDi_ZfbPOZ23a97_BK--5noLNoIURWzkP71EJcFrrkdWaJrdxMgSxCZmy33RnMxx6G6z0UBepOdZGk6O3C1m4YdkqiUw5iOSNBKHp');">
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="watermark border-8 border-red-600 px-6 py-4 flex flex-col items-center">
-              <span class="text-red-600 text-5xl font-black uppercase tracking-tighter">REJECTED BY VAR</span>
-              <span class="text-red-600 text-sm font-bold uppercase tracking-[0.3em]">INSCRIPCIÓN DENEGADA</span>
-            </div>
-          </div>
+          <div id="item-image" class="w-full h-full bg-cover bg-center">
+          </div>         
           <div class="absolute bottom-0 left-0 right-0 bg-deep-blue p-4 text-pure-white">
             <p class="text-xl font-black" id="item-badge"></p>
           </div>
@@ -323,6 +316,11 @@
           const idElement = document.getElementById('item-id');
           if (idElement) {
             idElement.textContent = 'ID-ACTIVO_' + String(item.id).padStart(3, '0');
+          }
+
+          const imageElement = document.getElementById('item-image');
+          if (imageElement) {
+            imageElement.style.backgroundImage = `url('${item.image}')`;
           }
 
           // Actualizar el pago mensual inicial (solo si existe el formulario)

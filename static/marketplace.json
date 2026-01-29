@@ -6,7 +6,7 @@
         "title": "Palanca Financiera 'Humo Blanco'",
         "description": "Vende el 49% de tu dignidad y los derechos de imagen de los nietos de tus socios a un fondo de inversión de las Islas Caimán.",
         "price": 400000000,
-        "image": "https://img.ejemplo.com/palanca.jpg",
+        "image": "/static/img/654561.png",
         "badge": "Más vendido"
     },
     {
@@ -16,7 +16,7 @@
         "title": "Penalti 'Contacto Fantasma'",
         "description": "Garantiza una caída estética en el área en el tiempo de descuento. Incluye revisión de VAR de 5 minutos grabada con un Nokia 3310.",
         "price": 12000000,
-        "image": "https://img.ejemplo.com/penalti.jpg",
+        "image": "/static/img/882342.png",
         "badge": "Efecto Bernabéu"
     },
     {
@@ -26,7 +26,7 @@
         "title": "Contrato CVC 'Pan para hoy...'",
         "description": "Dinero rápido para fichar a un extremo cojo a cambio de hipotecar los derechos de televisión del club hasta el año 2075.",
         "price": 1900000000,
-        "image": "https://img.ejemplo.com/hipoteca.jpg",
+        "image": "/static/img/129034.png",
         "badge": "Plan Impulso"
     },
     {
@@ -36,7 +36,7 @@
         "title": "Pack Lunes a las 21:00h",
         "description": "El horario favorito de la familia trabajadora. Asegura que nadie pueda ir al estadio y que la audiencia se concentre en bares de Singapur.",
         "price": 0,
-        "image": "https://img.ejemplo.com/reloj.jpg",
+        "image": "/static/img/445566.png",
         "badge": "Gratis (para los chinos)"
     },
     {
@@ -46,7 +46,7 @@
         "title": "Billete de Ida a Riad",
         "description": "Traslada tu competición local a 5.000km de distancia. Incluye fans de alquiler con camisetas mal falsificadas y 0% de ambiente futbolero.",
         "price": 40000000,
-        "image": "https://img.ejemplo.com/desierto.jpg",
+        "image": "/static/img/778899.png",
         "badge": "Fútbol Global"
     },
     {
@@ -56,7 +56,7 @@
         "title": "Líneas de VAR 'Grosor Variable'",
         "description": "Servicio de trazado de líneas de fuera de juego con un pincel de 50px de ancho. Si no entra, la empujamos con el ratón.",
         "price": 250000,
-        "image": "https://img.ejemplo.com/var-lines.jpg",
+        "image": "/static/img/332211.png",
         "badge": "Geometría Creativa"
     },
     {
@@ -66,7 +66,7 @@
         "title": "Fichaje Estrella (No Inscribible)",
         "description": "Compra a un crack mundial para que se pase 6 meses entrenando en el gimnasio porque te sobran 2 euros de límite salarial.",
         "price": 85000000,
-        "image": "https://img.ejemplo.com/crack.jpg",
+        "image": "/static/img/101010.png",
         "badge": "Fair Play Style"
     },
     {
@@ -76,7 +76,7 @@
         "title": "Pack 5 Querellas 'Anti-Florentino'",
         "description": "Un lote de demandas redactadas por abogados expertos en estirar el chicle legal. Ideales para frenar cualquier intento de mejorar el fútbol sin permiso de la Liga.",
         "price": 1500000,
-        "image": "https://img.ejemplo.com/demanda.jpg",
+        "image": "/static/img/998877.png",
         "badge": "Prioridad Judicial"
     },
     {
@@ -86,7 +86,7 @@
         "title": "Derechos del Canapé de Gambas",
         "description": "Vende el 25% de los beneficios del catering del palco V.I.P. durante los próximos 15 años para poder inscribir al tercer portero.",
         "price": 500000,
-        "image": "https://img.ejemplo.com/catering.jpg",
+        "image": "/static/img/223344.png",
         "badge": "Palanca Sabrosa"
     },
     {
@@ -96,7 +96,7 @@
         "title": "Sinfonía 'Estadio Lleno' (MP3)",
         "description": "Audio en alta fidelidad de cánticos y aplausos para tapar los pitos del público real. Incluye el extra 'Gritos de alegría' al ver el logo de un patrocinador.",
         "price": 75000,
-        "image": "https://img.ejemplo.com/audio.jpg",
+        "image": "/static/img/554433.png",
         "badge": "Magia Sonora"
     },
     {
@@ -106,7 +106,7 @@
         "title": "Cláusula del Miedo 'Full HD'",
         "description": "Evita que el jugador que has cedido te meta un gol y te deje en ridículo. Si el jugador se acerca al área, recibe una descarga eléctrica en las espinilleras.",
         "price": 2000000,
-        "image": "https://img.ejemplo.com/clausula.jpg",
+        "image": "/static/img/112211.png",
         "badge": "Cobardía Asegurada"
     },
     {
@@ -116,7 +116,7 @@
         "title": "Algoritmo de Límite Salarial 'Gummy'",
         "description": "Un software que hace que tu límite salarial se estire o se encoja mágicamente dependiendo de lo bien que te lleves con la directiva de la patronal.",
         "price": 9999999,
-        "image": "https://img.ejemplo.com/limite.jpg",
+        "image": "/static/img/909090.png",
         "badge": "Matemática Creativa"
     },
     {
@@ -126,7 +126,7 @@
         "title": "Gira 'Jugar en Miami porque sí'",
         "description": "Un Girona-Getafe en Florida a las 4 de la mañana. Incluye un perrito caliente de 20 dólares y la pérdida total del jet lag para toda la plantilla.",
         "price": 10000000,
-        "image": "https://img.ejemplo.com/miami.jpg",
+        "image": "/static/img/808080.png",
         "badge": "American Dream"
     },
     {
@@ -136,7 +136,7 @@
         "title": "Botón 'Apagar monitor VAR'",
         "description": "Permite que el árbitro ignore la pantalla justo cuando hay una agresión clarísima. Incluye la excusa oficial: 'Se ha ido el WiFi en la sala'.",
         "price": 5000000,
-        "image": "https://img.ejemplo.com/var-off.jpg",
+        "image": "/static/img/707070.png",
         "badge": "Paz Visual"
     }
 ]
