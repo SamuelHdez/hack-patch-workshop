@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>404 - Partido Suspendido | Tebasaenterar</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "dark-gray": "#515455",
+            "deep-blue": "#033778",
+            "light-gray": "#b1b0b1",
+            "bright-blue": "#00aadb",
+            "pure-white": "#ffffff",
+          },
+          fontFamily: {
+            "display": ["Lexend"]
+          },
+          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #ffffff;
+            color: #033778;
+        }
+        .official-seal-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60rem;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+            user-select: none;
+        }
+        .bureaucratic-container {
+            border: 4px solid #033778;
+            background-color: #ffffff;
+            box-shadow: 20px 20px 0px #b1b0b1;
+        }
+        .var-monitor {
+            background: #111;
+            border: 8px solid #515455;
+            box-shadow: inset 0 0 20px rgba(0,170,219,0.3);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-10">
+  <header
+    class="fixed top-0 left-0 w-full border-b-4 border-deep-blue bg-pure-white px-6 py-4 flex justify-between items-center z-50">
+    <a href="/">
+      <div class="flex items-center gap-4 text-deep-blue">
+        <div class="size-8">
+          <span class="material-symbols-outlined text-4xl">sports_soccer</span>
+        </div>
+        <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
+          Tebasaenterar
+        </h2>
+      </div>
+    </a>
+    <div class="text-[10px] font-black uppercase tracking-widest bg-deep-blue text-white px-3 py-1">
+      Acta de Incidencia Nº 404-2024
+    </div>
+  </header>
+  <main class="max-w-3xl w-full bureaucratic-container p-8 md:p-12 text-center mt-20 relative overflow-hidden">
+    <div
+      class="absolute top-4 right-4 border-2 border-red-600 text-red-600 px-4 py-1 rotate-12 font-black text-sm uppercase">
+      IMPUGNADO
+    </div>
+    <div class="flex flex-col items-center justify-center mb-10">
+      <div class="relative">
+        <span class="material-symbols-outlined text-[160px] leading-none text-deep-blue">sports_handball</span>
+        <div class="var-monitor absolute -right-12 top-4 w-48 h-32 flex flex-col items-center justify-center">
+          <div class="text-bright-blue font-black text-2xl tracking-tighter animate-pulse">404</div>
+          <div class="text-white text-[8px] font-bold uppercase tracking-widest mt-1">NOT FOUND</div>
+          <div class="absolute bottom-1 right-1 flex gap-1">
+            <div class="w-1 h-1 bg-red-600 rounded-full"></div>
+            <div class="w-1 h-1 bg-green-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-black text-deep-blue uppercase mb-4 leading-none italic">
+      ERROR 404: <br />PARTIDO SUSPENDIDO
+    </h1>
+    <div class="w-24 h-2 bg-bright-blue mx-auto mb-6"></div>
+    <p
+      class="text-dark-gray font-bold text-sm md:text-base uppercase tracking-wide max-w-xl mx-auto mb-10 leading-relaxed">
+      El recurso solicitado ha sido impugnado por el <span class="text-deep-blue">Comité de Competición</span> por falta
+      de <span class="text-red-600 underline">Fair Play Financiero</span>. No hay masa salarial suficiente para cargar
+      esta página.
+    </p>
+    <div class="flex flex-col md:flex-row gap-4 justify-center">
+      <a class="bg-pure-white text-deep-blue px-8 py-3 border-4 border-deep-blue font-black uppercase text-xs tracking-widest hover:bg-light-gray transition-all flex items-center justify-center gap-2"
+        href="/">
+        <span class="material-symbols-outlined text-sm">meeting_room</span>
+        VOLVER AL DESPACHO DE TEBAS
+      </a>
+    </div>
+    <div
+      class="mt-12 pt-6 border-t border-light-gray flex flex-col md:flex-row justify-between items-center text-[10px] text-light-gray font-bold uppercase">
+      <span>Árbitro de VAR: Clos Gómez Jr.</span>
+      <span>Localización: Sótano de la Liga</span>
+      <span>Hora: 23:45 (Prime Time)</span>
+    </div>
+  </main>
+  <div
+    class="hidden lg:block fixed left-10 top-1/2 -rotate-90 origin-left text-[10px] font-bold text-light-gray uppercase tracking-[1em]">
+    COMITÉ DE JURISDICCIÓN EXTRAORDINARIA Y PALANCAS
+  </div>
+  <div class="w-full overflow-hidden bg-deep-blue text-white py-3 fixed bottom-0 border-t-2 border-bright-blue">
+    <div class="whitespace-nowrap flex gap-10">
+      <span class="flex items-center gap-2 shrink-0">
+        <span class="text-bright-blue font-black uppercase text-xs">[MODIFICACIÓN]</span>
+        <span class="text-[11px] font-bold uppercase">La página 404 ahora cuenta como activo amortizable a 50
+          años...</span>
+      </span>
+      <span class="flex items-center gap-2 shrink-0">
+        <span class="text-bright-blue font-black uppercase text-xs">[URGENTE]</span>
+        <span class="text-[11px] font-bold uppercase">Se busca patrocinador para los mensajes de error (Interesados
+          llamar al despacho)...</span>
+      </span>
+      <span class="flex items-center gap-2 shrink-0">
+        <span class="text-bright-blue font-black uppercase text-xs">[INFO]</span>
+        <span class="text-[11px] font-bold uppercase">Multa de 600.000€ al usuario por intentar entrar en una URL
+          inexistente...</span>
+      </span>
+    </div>
+  </div>
+
+</body>
+
+</html>
