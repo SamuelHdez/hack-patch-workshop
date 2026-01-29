@@ -2,189 +2,314 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ticketmaster Admin</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="../static/styles.css">
-    <link rel="stylesheet" href="../static/admin.css">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tebasaenterar - Panel de Control de la Liga</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "dark-gray": "#515455",
+                        "deep-blue": "#033778",
+                        "light-gray": "#b1b0b1",
+                        "bright-blue": "#00aadb",
+                        "pure-white": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend"]
+                    },
+                    borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #ffffff;
+            color: #033778;
+        }
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #033778;
+            color: #ffffff;
+            padding: 12px 0;
+            position: fixed;
+            bottom: 0;
+            z-index: 50;
+            border-top: 2px solid #00aadb;
+        }
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: ticker-move 45s linear infinite;
+        }
+        @keyframes ticker-move {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        .bureaucratic-border {
+            border: 4px solid #033778;
+        }
+        .sidebar-widget {
+            border: 2px solid #033778;
+            background-color: #b1b0b1;
+        }
+    </style>
 </head>
 
-<body>
-    <header>
-        <a href="/">
-            <div class="logo">
-                <svg class="sc-d4f663ea-0 gQjdxW" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 135 24" fill="#fff" height="100%">
-                    <path
-                        d="M41.57 6.27c-4.02 0-6.97 3.63-6.97 7.4 0 3.62 2.38 5.32 5.9 5.32 1.3 0 2.66-.3 3.9-.68l.4-2.5a8.98 8.98 0 0 1-3.75.86c-2.04 0-3.23-.71-3.39-2.62l-.02-.34v-.1a6.46 6.46 0 0 1 .52-2.41c.61-1.55 1.48-2.62 3.36-2.62 1.33 0 2.02.73 2.02 2.03 0 .28-.02.54-.07.83H39.1a7.57 7.57 0 0 0-.34 2.17h7.5c.2-.9.32-1.8.32-2.72 0-3.09-2-4.62-5.02-4.62zm-5.4.28h-4.15l-4.44 4.41h-.05L29.65 1h-3.19l-3.78 17.7h3.11l1.38-6.44h.05l3.16 6.45h3.6l-3.7-6.62 5.88-5.54zm15.16 8.8a5 5 0 0 1 .15-1.18l1.16-5.3h2.86l.5-2.32h-2.86l.79-3.61-3.42 1.1-.55 2.5h-2.3l-.51 2.32h2.3l-.9 4.11c-.2.97-.4 1.89-.4 2.83 0 2.34 1.52 3.2 3.69 3.2.54 0 1.16-.18 1.7-.3l.56-2.45a4.28 4.28 0 0 1-1.55.28c-.72 0-1.22-.44-1.22-1.18zm-47.14 0c0-.47.07-.9.14-1.18l1.16-5.3h2.86l.5-2.32H5.99l.79-3.61-3.43 1.1-.54 2.5H.5L0 8.87h2.3l-.9 4.11c-.21.97-.4 1.89-.4 2.83C1 18.14 2.52 19 4.69 19c.54 0 1.16-.18 1.7-.3l.56-2.45a4.27 4.27 0 0 1-1.55.28c-.71 0-1.22-.44-1.22-1.18zm12.48-1.98c0-2.29 1.42-4.65 3.97-4.65.88 0 1.7.21 2.33.62l.78-2.6a11.4 11.4 0 0 0-3.19-.47c-4.4 0-7.22 3.23-7.22 7.48 0 3.14 2.04 5.24 5.2 5.24 1.05 0 2.1-.1 3.07-.57l.36-2.5c-.83.4-1.81.61-2.6.61-2.18 0-2.7-1.58-2.7-3.16zM14.5 1.31h-3.19l-.67 3.02h3.2l.66-3.02zm-4.36 5.24L7.54 18.7h3.19l2.61-12.16h-3.19zm72.06-.27c-1.43 0-2.81.26-4.17.73l-.45 2.53a9.48 9.48 0 0 1 4.02-.95c1.12 0 2.45.35 2.45 1.58 0 .36 0 .71-.1 1.04h-1.11c-3 0-7.52.3-7.52 4.32 0 2.24 1.57 3.47 3.78 3.47 1.76 0 2.86-.78 3.95-2.15h.05l-.33 1.87h2.68c.29-2.3 1.5-7.06 1.5-8.7 0-2.85-2.3-3.74-4.75-3.74zM80 16.68c-.82 0-1.62-.42-1.62-1.27 0-2.05 2.56-2.31 4.1-2.31h1.13c-.5 1.96-1.24 3.58-3.61 3.58zM71.6 6.27c-1.72 0-3.5.73-4.31 2.31h-.05c-.17-1.47-1.67-2.31-3.12-2.31-1.5 0-2.9.66-3.75 1.9h-.05l.29-1.62h-2.98l-.26 1.35-2.23 10.8h3.18l1.26-5.78c.4-1.63 1-4.2 3.16-4.2.82 0 1.5.57 1.5 1.46 0 .74-.23 1.87-.4 2.6l-1.28 5.93h3.18L67 12.92c.4-1.65.95-4.2 3.17-4.2.8 0 1.5.57 1.5 1.46 0 .74-.24 1.87-.4 2.6l-1.3 5.93h3.2l1.27-5.81c.27-1 .55-2.22.55-3.3a3.4 3.4 0 0 0-3.4-3.33zm41.24 0c-4.02 0-6.97 3.63-6.97 7.4 0 3.62 2.38 5.32 5.9 5.32 1.3 0 2.66-.3 3.9-.68l.4-2.5a9 9 0 0 1-3.75.86c-2.04 0-3.23-.71-3.38-2.62-.01-.12-.03-.22-.03-.34v-.1c.02-.84.2-1.66.53-2.41.6-1.55 1.47-2.62 3.35-2.62 1.33 0 2.02.73 2.02 2.03 0 .28-.02.54-.07.83h-4.36a7.57 7.57 0 0 0-.34 2.17h7.5c.2-.9.32-1.8.32-2.72 0-3.09-2-4.62-5.02-4.62zm10.18 2.57h-.05l.43-2.3h-3.05l-.28 1.64-2.19 10.53h3.19l1.14-5.46c.4-1.96 1.5-3.96 3.76-3.96.4 0 .85.07 1.2.19l.68-3.1a4.9 4.9 0 0 0-1.22-.11c-1.47 0-3.04 1.25-3.61 2.57zm-20.87 6.51c0-.47.07-.9.14-1.18l1.17-5.3h2.85l.5-2.32h-2.85l.78-3.61-3.42 1.1-.55 2.5h-2.3l-.5 2.32h2.3l-.9 4.11c-.22.97-.4 1.89-.4 2.83 0 2.34 1.52 3.2 3.68 3.2.55 0 1.17-.18 1.71-.3l.55-2.45c-.4.17-.98.28-1.55.28-.71 0-1.21-.44-1.21-1.18zm-13.31-5.21c0 3.04 4.13 3.23 4.13 5.2 0 .98-1.12 1.33-2.19 1.33a6.01 6.01 0 0 1-3.04-.94l-.7 2.53a8.8 8.8 0 0 0 3.74.73c2.74 0 5.52-.95 5.52-4.1 0-2.98-4.14-3.55-4.14-5.08 0-.97 1.19-1.23 2.14-1.23.9 0 1.79.26 2.13.44l.69-2.38a13.27 13.27 0 0 0-2.98-.37c-2.53 0-5.3 1.01-5.3 3.87zm43.23-3.86A2.74 2.74 0 0 0 129.33 9c0 1.5 1.23 2.72 2.74 2.72A2.73 2.73 0 0 0 134.81 9c0-1.5-1.23-2.72-2.74-2.72zm.01 5.04A2.23 2.23 0 0 1 129.86 9c0-1.3.95-2.31 2.22-2.31 1.26 0 2.21 1.01 2.21 2.31s-.95 2.32-2.2 2.32zm1.28-3.02c0-.6-.36-.9-1.1-.9h-1.23v3.2h.52V9.17h.44l.9 1.41h.55l-.91-1.4c.5 0 .83-.38.83-.89zm-1.81.48V7.8h.62c.34 0 .66.1.66.47 0 .41-.26.5-.66.5h-.62z">
-                    </path>
-                </svg>
+<body class="min-h-screen bg-pure-white">
+    <header
+        class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-10 lg:px-20 py-4">
+        <div class="flex items-center justify-between whitespace-nowrap">
+            <div class="flex items-center gap-8">
+                <a href="/">
+                    <div class="flex items-center gap-4 text-deep-blue">
+                        <div class="size-8">
+                            <span class="material-symbols-outlined text-4xl">sports_soccer</span>
+                        </div>
+                        <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
+                            Tebasaenterar
+                        </h2>
+                    </div>
+                </a>
+                <nav class="hidden lg:flex items-center gap-9">
+                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+                        href="#">Boletín Oficial</a>
+                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+                        href="#">Censo de Palancas</a>
+                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+                        href="#">VAR-farsa</a>
+                </nav>
             </div>
-        </a>
-        <div class="flex-1">
-        </div>
-
+            <div class="flex flex-1 justify-end gap-4 md:gap-6 items-center">
+                <button
+                    class="bg-bright-blue text-pure-white px-6 py-2 border-2 border-deep-blue font-black uppercase text-xs tracking-widest hover:brightness-110 transition-all">
+                    Decreto de Urgencia
+                </button>
+                <div
+                    class="hidden md:flex items-center gap-2 text-deep-blue font-black uppercase text-xs tracking-widest bg-light-gray px-4 py-2 border-2 border-deep-blue">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    <span>Admin: J. Tebas Jr.</span>
+                </div>
+            </div>
         </div>
     </header>
-    <div class="dashboard-root">
-        <nav class="sidebar">
+    <main class="max-w-[1400px] mx-auto pt-8 pb-32 px-4">
+        <div class="mb-8 border-b-4 border-deep-blue pb-4 flex justify-between items-end">
             <div>
-                <div class="sidebar-header">
-                    <img class="sidebar-logo"
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqnQBHS9IWE7hIEFKG12Qx7pwOFx2aH9VrHg&s"
-                        alt="Soft UI Logo">
-                    <span class="sidebar-title">TICKETMASTER</span>
-                </div>
-                <div class="sidebar-menu">
-                    <ul>
-                        <li><a class="sidebar-link active" href="#"><i class="material-icons">dashboard</i><span>Panel
-                                    de administración</span></a></li>
-                        <li><a class="sidebar-link" href="#"><i
-                                    class="material-icons">receipt</i><span>Eventos</span></a></li>
-                        <li><a class="sidebar-link" href="#"><i
-                                    class="material-icons">person</i><span>Usuarios</span></a></li>
-                        <li><a class="sidebar-link" href="#"><i
-                                    class="material-icons">assignment</i><span>Ventas</span></a></li>
-                    </ul>
+                <h1 class="text-deep-blue text-4xl font-black uppercase tracking-tighter">Panel de Gestión Centralizada
+                </h1>
+                <p class="text-dark-gray font-bold uppercase text-sm tracking-widest mt-2">Bienvenido al centro de
+                    control de la justicia deportiva (según presupuesto)</p>
+            </div>
+            <div class="text-right">
+                <p class="text-deep-blue font-black text-xl uppercase italic">Límite Salarial: -€452M</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 space-y-8">
+                <section class="bureaucratic-border p-6 bg-pure-white">
+                    <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-2">
+                        <span class="material-symbols-outlined">event_busy</span>
+                        <h3 class="text-deep-blue font-black uppercase tracking-widest">Calendario de Incidentes
+                            (Próximas Jornadas)</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="sidebar-widget p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-black bg-deep-blue text-pure-white px-2 py-0.5">LUNES
+                                    23:00</span>
+                                <span class="text-[10px] font-bold text-dark-gray italic">Casi en Martes</span>
+                            </div>
+                            <p class="font-black text-deep-blue text-sm uppercase">FC Arruinado vs Real Deuda</p>
+                            <p class="text-[11px] text-dark-gray mt-1">Motivo: Petición de la operadora de TV china</p>
+                        </div>
+                        <div class="sidebar-widget p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-black bg-bright-blue text-pure-white px-2 py-0.5">POR
+                                    DETERMINAR</span>
+                            </div>
+                            <p class="font-black text-deep-blue text-sm uppercase">Atlético Sufridores vs Betis Pobre
+                            </p>
+                            <p class="text-[11px] text-dark-gray mt-1">Estado: Pendiente de lanzamiento de moneda</p>
+                        </div>
+                        <div class="sidebar-widget p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-black bg-deep-blue text-pure-white px-2 py-0.5">DOMINGO
+                                    14:00</span>
+                            </div>
+                            <p class="font-black text-deep-blue text-sm uppercase">Getafe vs Mallorca</p>
+                            <p class="text-[11px] text-dark-gray mt-1">Nota: 45 grados a la sombra programados</p>
+                        </div>
+                        <div class="sidebar-widget p-4 opacity-50">
+                            <div class="flex justify-between items-start mb-2">
+                                <span
+                                    class="text-[10px] font-black bg-dark-gray text-pure-white px-2 py-0.5">SUSPENDIDO</span>
+                            </div>
+                            <p class="font-black text-deep-blue text-sm uppercase">Valencia CF vs Su Propios Fans</p>
+                            <p class="text-[11px] text-dark-gray mt-1">Motivo: Exceso de sentido común en la grada</p>
+                        </div>
+                    </div>
+                </section>
+                <section class="bureaucratic-border p-6 bg-light-gray">
+                    <div class="flex items-center justify-between mb-6 border-b-2 border-deep-blue pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined">payments</span>
+                            <h3 class="text-deep-blue font-black uppercase tracking-widest">Bóveda de Palancas (Vault of
+                                Levers)</h3>
+                        </div>
+                        <button
+                            class="bg-bright-blue text-pure-white px-3 py-1 text-[10px] font-bold border-2 border-deep-blue">HIPOTECAR
+                            FUTURO</button>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-8 items-center">
+                        <div class="flex-1 text-center border-r-2 border-deep-blue pr-8">
+                            <p class="text-[10px] font-black text-dark-gray uppercase">Dinero Blanqueado... digo, Ganado
+                            </p>
+                            <div class="flex items-center justify-center gap-2 mt-2">
+                                <span class="text-5xl font-black text-deep-blue">$</span>
+                                <span class="text-6xl font-black text-deep-blue tracking-tighter">842.100.000</span>
+                            </div>
+                            <p class="text-[11px] italic text-deep-blue mt-2">Cifra sujeta a cambios tras auditoría de
+                                amigos</p>
+                        </div>
+                        <div class="w-full md:w-48 h-32 flex items-end gap-2 px-4">
+                            <div class="bg-deep-blue w-full h-[20%]"></div>
+                            <div class="bg-bright-blue w-full h-[45%]"></div>
+                            <div class="bg-deep-blue w-full h-[85%] relative">
+                                <span class="absolute -top-6 left-0 text-[8px] font-black text-bright-blue">PICOS DE
+                                    DEUDA</span>
+                            </div>
+                            <div class="bg-bright-blue w-full h-[60%]"></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid grid-cols-3 gap-2">
+                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
+                            <p class="text-[9px] font-bold uppercase">Catering</p>
+                            <p class="text-xs font-black">€12M</p>
+                        </div>
+                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
+                            <p class="text-[9px] font-bold uppercase">Abogados</p>
+                            <p class="text-xs font-black">€145M</p>
+                        </div>
+                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
+                            <p class="text-[9px] font-bold uppercase">CVC Gasoil</p>
+                            <p class="text-xs font-black">€500M</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="lg:col-span-4 space-y-6">
+                <section class="sidebar-widget p-6">
+                    <div class="flex items-center gap-2 mb-4 border-b border-deep-blue pb-2">
+                        <span class="material-symbols-outlined">sports</span>
+                        <h3 class="text-deep-blue font-black uppercase text-xs tracking-widest">Asignación de Colegiados
+                        </h3>
+                    </div>
+                    <p class="text-[10px] text-dark-gray mb-4 italic leading-tight">Seleccione el nivel de controversia
+                        deseado para el próximo encuentro.</p>
+                    <div class="space-y-3">
+                        <div
+                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
+                            <div>
+                                <p class="text-xs font-black uppercase">Mateu LaPausa</p>
+                                <div class="flex gap-1 mt-1">
+                                    <span class="size-2 bg-red-600"></span>
+                                    <span class="size-2 bg-red-600"></span>
+                                    <span class="size-2 bg-red-600"></span>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
+                                99%</span>
+                        </div>
+                        <div
+                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
+                            <div>
+                                <p class="text-xs font-black uppercase">Gil Mañero</p>
+                                <div class="flex gap-1 mt-1">
+                                    <span class="size-2 bg-red-600"></span>
+                                    <span class="size-2 bg-red-600"></span>
+                                    <span class="size-2 bg-yellow-400"></span>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
+                                85%</span>
+                        </div>
+                        <div
+                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
+                            <div>
+                                <p class="text-xs font-black uppercase">Sánchez Miércoles</p>
+                                <div class="flex gap-1 mt-1">
+                                    <span class="size-2 bg-red-600"></span>
+                                    <span class="size-2 bg-yellow-400"></span>
+                                    <span class="size-2 bg-yellow-400"></span>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
+                                72%</span>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full mt-4 bg-bright-blue text-pure-white font-black py-2 border-2 border-deep-blue text-[10px] uppercase tracking-widest hover:brightness-110">Confirmar
+                        Designación Digital</button>
+                </section>
+                <section class="sidebar-widget p-6">
+                    <h3
+                        class="text-deep-blue font-black uppercase text-xs tracking-widest mb-4 border-b border-deep-blue pb-2">
+                        Acciones Rápidas</h3>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
+                            Sanción por "Hablar de más"
+                            <span class="material-symbols-outlined text-sm">gavel</span>
+                        </button>
+                        <button
+                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
+                            Inventar Nueva Norma FairPlay
+                            <span class="material-symbols-outlined text-sm">edit_note</span>
+                        </button>
+                        <button
+                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
+                            Subir Precio de DAZN
+                            <span class="material-symbols-outlined text-sm">trending_up</span>
+                        </button>
+                    </div>
+                </section>
+                <div class="p-4 border-4 border-dotted border-deep-blue bg-pure-white">
+                    <p class="text-[10px] font-bold text-deep-blue uppercase leading-tight italic">"El fútbol es de los
+                        fans, pero los derechos son míos hasta 2075."</p>
+                    <p class="text-[8px] mt-1 text-dark-gray">- Cita anónima de la presidencia</p>
                 </div>
             </div>
-            <div class="sidebar-footer">
-                <div class="sidebar-footer-profile">
-                    <img class="avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuario" />
-                    <span class="profile-name">Admin</span>
-                </div>
-            </div>
-        </nav>
-        <main class="main-content">
-            <div class="navbar">
-                <span class="navbar-left">Pandel de administración</span>
-                <div class="navbar-right">
-                    <input class="navbar-search" type="text" placeholder="Buscar..." />
-                    <span class="material-icons">notifications</span>
-                    <span class="nav-user"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User"> <span
-                            class="material-icons">expand_more</span></span>
-                </div>
-            </div>
-            <!-- Métricas resumen -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-title">Ventas de hoy</div>
-                    <div class="stat-value">530.000€</div>
-                    <div class="stat-change positive">+55% que ayer</div>
-                    <span class="stat-icon credits"><i class="material-icons">payments</i></span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Usuarios activos</div>
-                    <div class="stat-value">23.000</div>
-                    <div class="stat-change positive">+3% que la semana pasada</div>
-                    <span class="stat-icon users"><i class="material-icons">groups</i></span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Nuevos clientes</div>
-                    <div class="stat-value">+3,462</div>
-                    <div class="stat-change negative">-2% que el último trimestre</div>
-                    <span class="stat-icon sales"><i class="material-icons">person_add</i></span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Ventas mensuales</div>
-                    <div class="stat-value">11.103.430€</div>
-                    <div class="stat-change positive">+5% que el último mes</div>
-                    <span class="stat-icon orders"><i class="material-icons">shopping_cart</i></span>
-                </div>
-            </div>
-
-            <!-- Projects y tabla -->
-            <div class="row">
-                <div class="col-md-8">
-                    <section class="card-sm">
-                        <div class="card-title">Eventos</div>
-                        <table class="projects-table">
-                            <thead>
-                                <tr>
-                                    <th>Tour</th>
-                                    <th>Artista</th>
-                                    <th>Ventas</th>
-                                    <th>Completado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><img class="avatar-xsm"
-                                            src="https://uk.tmconst.com/ccp-salesforce-images/ES/BB26-1440x450.jpg?auto=webp" />
-                                        DeBÍ TiRAR MáS FOToS World Tour</td>
-                                    <td>Bad Bunny
-                                    </td>
-                                    <td>2.940.000€</td>
-                                    <td>
-                                        <span class="badge info">100%</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><img class="avatar-xsm"
-                                            src="https://uk.tmconst.com/ccp-salesforce-images/ES/acdc25-date2-368x207.jpg" />
-                                        PWR UP Tour</td>
-                                    <td>AC/DC
-                                    </td>
-                                    <td>1.003.000€</td>
-                                    <td><span class="badge success">85%</span></td>
-                                </tr>
-                                <tr>
-                                    <td><img class="avatar-xsm"
-                                            src="https://uk.tmconst.com/ccp-salesforce-images/ES/TravisScott-720x405.jpg" />
-                                        Circus Maximus Tour
-                                    </td>
-                                    <td>Travis Scott</td>
-                                    <td>300.500€</td>
-                                    <td><span class="badge warning">50%</span></td>
-                                </tr>
-                                <tr>
-                                    <td><img class="avatar-xsm"
-                                            src="https://uk.tmconst.com/ccp-salesforce-images/ES/fito25_Media.jpg" />
-                                        Aullidos Tour</td>
-                                    <td>Fito & Fitipaldis
-                                    </td>
-                                    <td>60.500€</td>
-                                    <td><span class="badge danger">20%</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                </div>
-                <div class="col-md-4">
-                    <section class="card-sm">
-                        <div class="card-title">Resumen de pedidos</div>
-                        <ul class="timeline">
-                            <li class="timeline-item">
-                                <span class="timeline-dot sales"></span>
-                                <span style="color:#344767;"><strong>+240€</strong></span> - DeBÍ TiRAR MáS FOToS World
-                                Tour <br />
-                                <small style="color:#8392ab;">20 MAY 10:20 AM</small>
-                            </li>
-                            <li class="timeline-item">
-                                <span class="timeline-dot info"></span>
-                                <span style="color:#344767;"><strong>+48</strong></span> - Nuevos usuarios <br />
-                                <small style="color:#8392ab;">21 MAY 2:15 PM</small>
-                            </li>
-                            <li class="timeline-item">
-                                <span class="timeline-dot warning"></span>
-                                <span style="color:#344767;"><strong>11.500€</strong></span> - Gastos del servidor
-                                <br />
-                                <small style="color:#8392ab;">20 MAY 2:50 AM</small>
-                            </li>
-                            <li class="timeline-item">
-                                <span class="timeline-dot danger"></span>
-                                <span style="color:#344767;"><strong>+404</strong></span> - Pedidos por procesar<br />
-                                <small style="color:#8392ab;">16 MAY 8:15 AM</small>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-            </div>
-        </main>
+        </div>
+    </main>
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="mx-6 font-black uppercase text-bright-blue">[ALERTA]</span> Se prohíbe el uso de césped natural
+            por ser demasiado barato...
+            <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> El nuevo balón oficial será
+            cuadrado para fomentar el espectáculo...
+            <span class="mx-6 font-black uppercase text-bright-blue">[REGISTRO]</span> Se venden los derechos del nombre
+            de los hijos de los jugadores por 10 palancas...
+            <span class="mx-6 font-black uppercase text-bright-blue">[INTERNO]</span> Se busca voluntario para limpiar
+            el VAR (lleva mucho polvo)...
+            <span class="mx-6 font-black uppercase text-bright-blue">[MEMO]</span> El lunes a las 23:00 es el prime time
+            de la audiencia de Mongolia...
+        </div>
     </div>
+
 </body>
 
 </html>
