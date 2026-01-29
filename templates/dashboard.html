@@ -96,11 +96,11 @@
                 </nav>
             </div>
             <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
-                
+
                 <div
                     class="flex items-center gap-2 text-deep-blue font-black uppercase text-xs tracking-widest bg-light-gray px-4 py-2 border-2 border-deep-blue">
                     <span class="material-symbols-outlined text-sm">person</span>
-                    <span>Expediente: #7392-CVC</span>
+                    <span>Expediente: #{{user}}</span>
                 </div>
             </div>
         </div>
@@ -170,8 +170,7 @@
                         </div>
                         <button
                             class="w-full bg-deep-blue text-pure-white font-black py-5 border-4 border-deep-blue text-lg uppercase tracking-widest hover:brightness-90 transition-all"
-                            type="button"
-                            onclick="window.location.href='/logout'">
+                            type="button" onclick="window.location.href='/logout'">
                             Cerrar Sesión
                         </button>
                     </form>
