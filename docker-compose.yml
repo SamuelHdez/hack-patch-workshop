@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app  # Esto permite ver cambios en vivo sin reconstruir (ideal para desarrollo)
+    environment:
+      - FLASK_ENV=development

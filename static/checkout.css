@@ -1,0 +1,101 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    background: #f6f6f6;
+    color: #121212;
+}
+
+.container {
+    margin: 36px auto;
+    background: #fff;
+    max-width: 600px;
+    padding: 36px 30px 24px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 32px #0001;
+}
+
+h1 {
+    color: #024ddf;
+    margin-bottom: 8px;
+}
+
+.evento-info {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.evento-info img {
+    width: 220px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.evento-details {
+    flex: 1;
+}
+
+.evento-details h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.2rem;
+    color: #222;
+}
+
+.evento-details p {
+    margin: 0 0 4px 0;
+    color: #666;
+    font-size: 1rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+    padding: 10px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.acciones {
+    margin-top: 18px;
+    text-align: right;
+}
+
+button {
+    background: #024ddf;
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 16px #0002;
+}
+
+button:hover {
+    background: #0139a7;
+}
+
+.mensaje {
+    margin-top: 18px;
+    color: #018c3a;
+    font-weight: 600;
+}

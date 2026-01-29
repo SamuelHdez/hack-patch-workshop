@@ -1,0 +1,217 @@
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url('https://ext.same-assets.com/877999546/809914308.false') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat-Bold';
+    src: url('https://ext.same-assets.com/877999546/2934957872.false') format('truetype');
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f3f3f3;
+    font-family: 'Poppins-Regular', Arial, sans-serif;
+}
+
+.limiter {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f3f3f3;
+    padding: 40px 0;
+    box-sizing: border-box;
+}
+
+.container-login100 {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.06);
+    width: 900px;
+    max-width: 95vw;
+    min-height: 600px;
+    display: flex;
+    overflow: hidden;
+}
+
+.login100-left {
+    width: 50%;
+    min-height: 100%;
+    background: url('https://auth.ticketmaster.com/assets/left-panel-image.e3d210a9.png') center center/cover no-repeat;
+    display: block;
+}
+
+.login100-right {
+    width: 50%;
+    padding: 60px 40px 30px 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    position: relative;
+}
+
+.login100-form-title {
+    font-family: 'Montserrat-Bold', Arial, sans-serif;
+    font-size: 22px;
+    color: #333;
+    letter-spacing: 2px;
+    text-align: center;
+    display: block;
+    margin-bottom: 40px;
+}
+
+.login100-form {
+    width: 100%;
+    max-width: 370px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 25px;
+    gap: 0;
+}
+
+.input100 {
+    font-family: inherit;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.2;
+    display: block;
+    width: 50%;
+    height: 50px;
+    background: #fafafa;
+    border: 1px solid #bcbcbc;
+    border-radius: 4px 0 0 4px;
+    padding: 0 20px;
+    transition: border 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input100+.input100 {
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+}
+
+.input100:focus {
+    border-color: #0139a7;
+}
+
+.login100-form-btn {
+    display: block;
+    width: 100%;
+    height: 50px;
+    border-radius: 4px;
+    background: #024ddf;
+    font-family: 'Montserrat-Bold', Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    transition: background 0.2s;
+    margin-bottom: 30px;
+    cursor: pointer;
+    letter-spacing: 2px;
+}
+
+.login100-form-btn:hover {
+    background: #0139a7;
+}
+
+.forgot-row {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 15px;
+    color: #91928f;
+}
+
+.forgot-row a {
+    color: #024ddf;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-row a:hover {
+    text-decoration: underline;
+    color: #0139a7;
+}
+
+.signup-row {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+.signup-row a {
+    color: #024ddf;
+    text-decoration: none;
+    font-family: 'Montserrat-Bold', Arial, sans-serif;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.signup-row a:hover {
+    color: #0139a7;
+    text-decoration: underline;
+}
+
+@media (max-width: 920px) {
+    .container-login100 {
+        flex-direction: column;
+        min-height: 100vw;
+    }
+
+    .login100-left,
+    .login100-right {
+        width: 100%;
+        min-height: 250px;
+    }
+
+    .login100-right {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container-login100 {
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .login100-right {
+        padding: 36px 6vw 20px 6vw;
+    }
+
+    .login100-form {
+        max-width: 100%;
+    }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    .input100,
+    .input100+.input100 {
+        width: 100%;
+        border-radius: 4px;
+        border-left: 1px solid #bcbcbc;
+        margin-top: 6px;
+    }
+
+    .input100:first-child {
+        margin-top: 0;
+    }
+}
