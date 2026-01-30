@@ -176,13 +176,11 @@ def load_cart():
 @app.route('/api/var-randomizer')
 def var_randomizer():
     db = get_db()
-    # Obtenemos un escándalo aleatorio de la base de datos
     scandal = db.execute('SELECT * FROM var_scandals ORDER BY RANDOM() LIMIT 1').fetchone()
     return jsonify(dict(scandal))
 
 @app.errorhandler(404)
 def page_not_found(e):
-    # Puedes renderizar un HTML que tenga el estilo de tu web
     return render_template('404.html'), 404
 
 @app.route('/debug')
