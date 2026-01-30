@@ -5,7 +5,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .:/app  # Esto permite ver cambios en vivo sin reconstruir (ideal para desarrollo)
+      - .:/app  # Esto permite ver cambios en vivo sin reconstruir
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=tebasaenterar.db
