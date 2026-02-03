@@ -112,6 +112,10 @@
             href="/">Boletín Oficial</a>
           <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
             href="/marketplace">Mercado de Palancas</a>
+          {% if user %}
+          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+            href="/palancas">Mis palancas</a>
+          {% endif %}
         </nav>
       </div>
       <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
@@ -288,7 +292,7 @@
       </div>
     </div>
   </main>
-  
+
   <footer class="bg-deep-blue text-pure-white border-t-4 border-bright-blue py-12 px-4 md:px-20 lg:px-40 pb-24">
     <div class="max-w-[1200px] mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -337,13 +341,15 @@
           </ul>
         </div>
       </div>
-      <div class="border-t-2 border-bright-blue pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-        <p class="text-light-gray">© 2026 TEBASAENTERAR | Todos los derechos reservados (y vendidos) | *Sujeto a cambios sin previo aviso **No leemos los emails</p>
-       
+      <div
+        class="border-t-2 border-bright-blue pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+        <p class="text-light-gray">© 2026 TEBASAENTERAR | Todos los derechos reservados (y vendidos) | *Sujeto a cambios
+          sin previo aviso **No leemos los emails</p>
+
       </div>
     </div>
   </footer>
-  
+
   <div class="ticker-wrap">
     <div class="ticker">
       <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> VAR confirma que el sol estaba

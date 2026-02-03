@@ -11,8 +11,6 @@ DATABASE = 'tebasaenterar.db'
 # Variable de entorno para simular modo desarrollo/producción
 ENV = os.environ.get('APP_ENV', 'dev')
 
-# Base de datos en memoria
-
 sessions = {}
 events = [
      {'id': 1, 'title': 'Concierto Bad Bunny 2025', 'image': 'https://via.placeholder.com/150'},
@@ -23,9 +21,7 @@ events = [
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        # Conectamos a la base de datos que creaste manualmente
         db = g._database = sqlite3.connect(DATABASE)
-        # Esto permite acceder a las columnas por nombre: user['username'] en vez de user[1]
         db.row_factory = sqlite3.Row
     return db
 
@@ -40,31 +36,72 @@ def home():
     user = request.cookies.get('user')
     return render_template('index.html', user=user)
 
+@app.route('/palancas')
+def palancas():
+    user = request.cookies.get('user')
+    userid = request.cookies.get('userid')
+    if not user or not userid:
+        return redirect(url_for('login'))
+    
+    db = get_db()
+    query = f"SELECT * FROM users WHERE id = {userid}"
+    user_data = db.execute(query).fetchone()
+    if not user_data:
+        return redirect(url_for('login'))
+    
+    query = f"SELECT * FROM palancas WHERE user_id = {userid} ORDER BY id DESC"
+    palanca_data = db.execute(query).fetchall()
+    
+    palancas_deserializadas = []
+    for palanca in palanca_data:
+        try:
+            contenido_bytes = palanca['contenido'].encode('latin1')
+            # Check if the content is valid for deserialization
+            if contenido_bytes:
+                contenido = pickle.loads(contenido_bytes)
+                palancas_deserializadas.append(contenido)
+            else:
+                palancas_deserializadas.append({'error': 'Contenido vacío'})
+        except Exception as e:
+            palancas_deserializadas.append({'error': f'No se pudo deserializar: {str(e)}'})
+    
+    return render_template('palancas.html', user=user, balance=user_data['balance'], palancas=palancas_deserializadas)
+
 @app.route('/checkout')
 def checkout():
     user = request.cookies.get('user')
+    userid = request.cookies.get('userid')
     item_id = request.args.get('id')
     
     if not item_id:
         return redirect(url_for('marketplace'))
     
     db = get_db()
-    # VULNERABILIDAD SQLi: Ideal para el workshop. 
-    # Un ID malicioso podría saltarse filtros o extraer datos.
+    
+    # Obtener datos del producto
     query = f"SELECT * FROM products WHERE id = {item_id}"
     
     try:
         item = db.execute(query).fetchone()
         if not item:
             return "Activo financiero no encontrado en el registro de Tebas.", 404
-            
-        return render_template('checkout.html', item=item, user=user)
+        
+        # Obtener datos del usuario incluyendo balance
+        balance = None
+        if userid:
+            user_query = f"SELECT balance FROM users WHERE id = {userid}"
+            user_data = db.execute(user_query).fetchone()
+            if user_data:
+                balance = user_data['balance']
+        
+        return render_template('checkout.html', item=item, user=user, balance=balance)
     except Exception as e:
         return f"Error en la auditoría: {e}"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     user_cookie = request.cookies.get('user')
+    userid_cookie = request.cookies.get('user')
     if user_cookie:
         return redirect(url_for('dashboard'))
 
@@ -73,9 +110,6 @@ def login():
         password = request.form['password']
         
         db = get_db()
-        
-        # VULNERABILIDAD CRÍTICA: SQL Injection
-        # Usamos f-strings para que el input del usuario vaya directo a la query
         query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
         
         try:
@@ -83,6 +117,7 @@ def login():
             if user:
                 resp = make_response(redirect(url_for('dashboard')))
                 resp.set_cookie('user', user['username'])
+                resp.set_cookie('userid', str(user['id']))
                 return resp
             else:
                 return 'Login incorrecto (Tebas no te deja pasar)'
@@ -95,6 +130,7 @@ def login():
 def logout():
     resp = make_response(redirect(url_for('login')))
     resp.set_cookie('user', '', expires=0)
+    resp.set_cookie('userid', '', expires=0)
     return resp
 
 @app.route('/dashboard')
@@ -108,15 +144,12 @@ def dashboard():
 
 @app.route('/admin')
 def admin():
-    # Este endpoint no debería estar accesible en producción
     return render_template('admin.html')
 
 @app.route('/marketplace')
 def marketplace():
     user = request.cookies.get('user')
     db = get_db()
-    
-    # Traemos todos los productos ordenados por precio (de más caro a menos caro)
     products = db.execute('SELECT * FROM products ORDER BY price DESC').fetchall()
     
     return render_template('marketplace.html', user=user, products=products)
@@ -153,21 +186,53 @@ def cart():
 
 @app.route('/save_cart', methods=['POST'])
 def save_cart():
+    user = request.cookies.get('user')
+    userid = request.cookies.get('userid')
     cart = request.form.get('cart')
+    
+    if not userid:
+        return "Usuario no autenticado", 401
+    
     try:
-        cart_data = eval(cart)  # Convert string representation to a Python object
-        with open('cart.pkl', 'wb') as f:
-            pickle.dump(cart_data, f)
-        return "Carrito guardado"
+        # Convertir el JSON a objeto
+        cart_obj = json.loads(cart)
+        
+        db = get_db()
+        
+        # Obtener datos del usuario
+        user_query = f"SELECT balance FROM users WHERE id = {userid}"
+        user_data = db.execute(user_query).fetchone()
+        
+        if not user_data:
+            return "Usuario no encontrado", 404
+        
+        current_balance = user_data['balance']
+        total_price = cart_obj.get('total_price', 0)
+        
+        if current_balance < total_price:
+            return "Balance insuficiente", 400
+        
+        new_balance = current_balance - total_price
+        update_query = f"UPDATE users SET balance = {new_balance} WHERE id = {userid}"
+        db.execute(update_query)
+        
+        # Convertir el carrito a pickle y guardar
+        cart_pickle = pickle.dumps(cart_obj).decode('latin1')
+        
+        insert_query = "INSERT INTO palancas (user_id, contenido) VALUES (?, ?)"
+        db.execute(insert_query, (userid, cart_pickle))
+        
+        db.commit()
+        return "Palanca aplicada correctamente"
     except Exception as e:
         print(e)
-        return "Error al guardar el carrito"
+        return f"Error al guardar el carrito: {str(e)}", 500
 
 @app.route('/load_cart')
 def load_cart():
     try:
         with open('cart.pkl', 'rb') as f:
-            cart = pickle.load(f)  # Insecure deserialization
+            cart = pickle.load(f)
         return f"{cart}"
     except Exception as e:
         print(e)

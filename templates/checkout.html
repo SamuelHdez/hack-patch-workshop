@@ -91,6 +91,10 @@
             href="/">Boletín Oficial</a>
           <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
             href="/marketplace">Mercado de Palancas</a>
+          {% if user %}
+          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
+            href="/palancas">Mis palancas</a>
+          {% endif %}
         </nav>
       </div>
       <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
@@ -144,7 +148,7 @@
           <h3 class="text-xs font-black uppercase bg-deep-blue text-pure-white px-3 py-1 w-fit">Precio</h3>
           <div class="border-l-4 border-deep-blue ml-2 pl-6 py-2 flex flex-col gap-2">
             <p class="text-4xl font-black text-bright-blue">
-              {{ "{:,.2f}".format(item.price).replace(',', 'X').replace('.', ',').replace('X', '.') }}€
+             {{ "{:,.0f}".format(item.price) }} MILLONES €
             </p>
             <p class="text-xs font-bold uppercase text-dark-gray">Precio por unidad de palanca</p>
           </div>
@@ -157,24 +161,41 @@
             <div class="bg-pure-white bureaucratic-border p-6 shadow-[8px_8px_0px_0px_#033778]">
               <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-4">
                 <span class="material-symbols-outlined text-bright-blue text-2xl">calculate</span>
-                <h2 class="text-xl font-black uppercase tracking-tighter">Añadir al carrito</h2>
+                <h2 class="text-xl font-black uppercase tracking-tighter">Comprar</h2>
               </div>
               <div class="flex flex-col gap-4">
                 <div class="flex flex-col gap-1">
                   <label class="text-[10px] font-black uppercase">Cantidad (Máximo 8)</label>
                   <input type="number" id="cantidad" name="cantidad" min="1" max="8" value="1" required>
                 </div>
-                <div class="flex flex-col gap-1">
-                  <label class="text-[10px] font-black uppercase">Precio Total</label>
-                  <div class="p-3 bg-light-gray/20 border-2 border-deep-blue">
-                  <p class="text-xl font-black text-bright-blue" id="total-price">
-                    {{ "{:,.2f}".format(item.price).replace(',', 'X').replace('.', ',').replace('X', '.') }}€
+
+                <div class="flex flex-col gap-1 bg-bright-blue/10 p-3 border-2 border-bright-blue rounded">
+                  <p class="text-[10px] font-black uppercase text-bright-blue">Balance Disponible</p>
+                  <p class="text-2xl font-black text-bright-blue">
+                    {{ "{:,.0f}".format(balance) }} MILLONES €
                   </p>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <label class="text-[10px] font-black uppercase">Precio Total (MILLONES €)</label>
+                  <div class="p-3 bg-light-gray/20 border-2 border-deep-blue">
+                    <p class="text-xl font-black text-bright-blue" id="total-price">
+                        {{ "{:,.0f}".format(item.price) }} €
+                    </p>
                   </div>
                 </div>
-              
+
+                <div id="balance-warning" class="hidden p-3 bg-red-100 border-2 border-red-500 rounded">
+                  <p class="text-sm font-bold text-red-700">
+                    <span class="material-symbols-outlined text-lg align-middle">warning</span>
+                    Balance insuficiente. Necesitas <span id="needed-amount" class="font-black">0</span> millones € más.
+                  </p>
+                </div>
+
                 <button type="submit"
-                  class="w-full py-4 mt-2 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778]">
+                  id="apply-button"
+                  class="w-full py-4 mt-2 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+                  disabled>
                   Aplicar palanca
                 </button>
               </div>
@@ -276,7 +297,25 @@
       const totalPrice = currentItem.price * cantidad;
       const totalPriceElement = document.getElementById('total-price');
       if (totalPriceElement) {
-        totalPriceElement.textContent = '€' + totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+      }
+
+      // Verificar si hay suficiente balance
+      const balance = parseFloat("{{ balance }}") || 0;
+      const applyButton = document.getElementById('apply-button');
+      const balanceWarning = document.getElementById('balance-warning');
+      const neededAmount = document.getElementById('needed-amount');
+
+      if (applyButton && balanceWarning) {
+        if (totalPrice > balance) {
+          applyButton.disabled = true;
+          balanceWarning.classList.remove('hidden');
+          const needed = totalPrice - balance;
+          neededAmount.textContent = needed.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        } else {
+          applyButton.disabled = false;
+          balanceWarning.classList.add('hidden');
+        }
       }
     }
 
@@ -297,9 +336,9 @@
     const cantidadInput = document.getElementById('cantidad');
     if (cantidadInput) {
       cantidadInput.addEventListener('input', updatePrice);
-      
+
       // Prevenir envío del formulario al presionar Enter
-      cantidadInput.addEventListener('keydown', function(e) {
+      cantidadInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
           e.preventDefault();
         }
@@ -319,7 +358,14 @@
         cart['user'] = '{{ user }}';
         cart['item_price'] = currentItem ? currentItem.price : 0;
         cart['total_price'] = (currentItem.price * parseInt(formData.get('cantidad') || 1));
+        cart['item_id'] = currentItem ? currentItem.id : null;
+        cart['item_title'] = currentItem ? currentItem.title : null;
+        cart['item_category'] = currentItem ? currentItem.category : null;
+        cart['item_badge'] = currentItem ? currentItem.badge : null;
+        cart['item_image'] = currentItem ? currentItem.image : null;
+        cart['item_description'] = currentItem ? currentItem.description : null;
 
+        console.log('Carrito a guardar:', cart);
         // Opcional: añade info de eventoId si quieres
         cart['id'] = itemId;
         fetch('/save_cart', {
@@ -332,7 +378,7 @@
           .then(res => res.text())
           .then(msg => {
             setTimeout(() => {
-              window.location.href = '/cart'; // <--- Aquí va la redirección
+              window.location.href = '/palancas'; // <--- Aquí va la redirección
             }, 1000);
           })
           .catch((err) => {
@@ -343,4 +389,5 @@
 
   </script>
 </body>
+
 </html>
