@@ -5,6 +5,8 @@ import json, os
 import pickle
 import sqlite3
 import requests
+import base64
+from urllib.request import urlopen
 
 app = Flask(__name__)
 DATABASE = 'tebasaenterar.db'
@@ -24,6 +26,32 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
         db.row_factory = sqlite3.Row
     return db
+
+@app.before_request
+def block_external_internal_routes():
+    if (request.path.startswith('/readfile') or request.path.startswith('/admin')) and request.remote_addr != '127.0.0.1' and request.remote_addr != 'localhost':
+        return "403 Forbidden, Internal Only.", 403
+    
+@app.route('/readfile')
+def internal_lfi():
+    filepath = request.args.get('file')
+    print(f"[DEBUG] Intentando abrir: {filepath}")
+    if not filepath:
+        return "❌ Falta el parámetro `file`", 400
+ 
+    # Limitar el acceso a la carpeta static
+    print(f"[DEBUG] 1")
+ 
+    if not os.path.isfile(filepath):
+        return f"❌ Archivo no encontrado: {filepath}", 404
+    try:
+        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+ 
+        # Limitar el tamaño para evitar respuestas enormes
+        return requests.Response(content, mimetype='text/plain')
+    except Exception as e:
+        return f"❌ Error leyendo el archivo: {e}", 500       
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -140,7 +168,14 @@ def dashboard():
         return redirect(url_for('login'))
     avatars = load_avatars()
     avatar_url = avatars.get(user, '/static/default-avatar.png')
-    return render_template('dashboard.html', user=user, avatar_url=avatar_url)
+    try:
+        response = requests.get(avatar_url, timeout=2, verify=False)
+        encoded = base64.b64encode(response.content).decode()
+        data_url = f"data:image/jpeg;base64,{encoded}"
+        print(f"[DEBUG] Avatar descargado: {avatar_url[:60]}")
+    except Exception as e:
+        print(f"[SSRF] Falló la petición: {e}")
+    return render_template('dashboard.html', user=user, avatar_url=data_url)
 
 @app.route('/admin')
 def admin():
@@ -248,11 +283,16 @@ def var_randomizer():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+@app.route('/logs')
+def logs():
+    with open('logs.txt', 'rb') as f:
+        return f.read()
+
 @app.route('/debug')
 def debug():
     if ENV == 'prod':
         return "No disponible en producción"
-    return jsonify({'debug': 'vars', 'env': ENV})
+    return jsonify({'debug': 'vars', 'env': ENV,'useradmin':'admin','adminpass':'admin', 'status':'Eres un chafardero, no deberias ver esto...','category':'golismeador'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

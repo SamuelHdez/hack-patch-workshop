@@ -1,0 +1,9 @@
+<p>WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.</p>
+<p> * Running on all addresses (0.0.0.0)</p>
+<p> * Running on https://127.0.0.1:5000</p>
+<p>Press CTRL+C to quit</p>
+<p> * Restarting with stat</p>
+<p> * Debugger is active!</p>
+<p> * Debugger PIN: XXX-XXX-XXX</p>
+<p> * Detected change in 'ticketweb.py', reloading</p>
+<p> * Restarting with stat</p>
