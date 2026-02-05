@@ -83,14 +83,16 @@ def palancas():
     palancas_deserializadas = []
     for palanca in palanca_data:
         try:
-            contenido_bytes = palanca['contenido'].encode('latin1')
-            # Check if the content is valid for deserialization
+            contenido_bytes = palanca['contenido']
             if contenido_bytes:
                 contenido = pickle.loads(contenido_bytes)
                 palancas_deserializadas.append(contenido)
             else:
                 palancas_deserializadas.append({'error': 'Contenido vacío'})
         except Exception as e:
+            print(f"[ERROR] Error en deserialización: {type(e).__name__}: {str(e)}")
+            import traceback
+            traceback.print_exc()
             palancas_deserializadas.append({'error': f'No se pudo deserializar: {str(e)}'})
     
     return render_template('palancas.html', user=user, balance=user_data['balance'], palancas=palancas_deserializadas)
@@ -122,14 +124,13 @@ def checkout():
             if user_data:
                 balance = user_data['balance']
         
-        return render_template('checkout.html', item=item, user=user, balance=balance)
+        return render_template('checkout.html', item=item, user=user, userid=userid, balance=balance)
     except Exception as e:
         return f"Error en la auditoría: {e}"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     user_cookie = request.cookies.get('user')
-    userid_cookie = request.cookies.get('user')
     if user_cookie:
         return redirect(url_for('dashboard'))
 
@@ -164,10 +165,15 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     user = request.cookies.get('user')
+    userid = request.cookies.get('userid')
     if not user:
         return redirect(url_for('login'))
-    avatars = load_avatars()
-    avatar_url = avatars.get(user, '/static/default-avatar.png')
+    db = get_db()
+    query = f"SELECT * FROM users WHERE id = {userid}"
+    user_data = db.execute(query).fetchone()
+    if not user_data:
+        return redirect(url_for('login'))
+    avatar_url = user_data['avatar']
     try:
         response = requests.get(avatar_url, timeout=2, verify=False)
         encoded = base64.b64encode(response.content).decode()
@@ -189,26 +195,19 @@ def marketplace():
     
     return render_template('marketplace.html', user=user, products=products)
 
-AVATAR_FILE = 'avatars.json'
-
-def load_avatars():
-    if not os.path.exists(AVATAR_FILE):
-        return {}
-    with open(AVATAR_FILE, 'r') as f:
-        return json.load(f)
-
-def save_avatars(avatars):
-    with open(AVATAR_FILE, 'w') as f:
-        json.dump(avatars, f)
-
 @app.route('/upload_image', methods=['GET', 'POST'])
 def upload_image():
     user = request.cookies.get('user')
+    userid = request.cookies.get('userid')
     if request.method == 'POST':
         url = request.form['image_url']
-        avatars = load_avatars()
-        avatars[user] = url
-        save_avatars(avatars)
+        db = get_db()
+        query = f"UPDATE users SET avatar = '{url}' WHERE id = {userid}"
+        try:
+            db.execute(query)
+            db.commit()
+        except Exception as e:
+            return f"Error al actualizar el avatar: {e}<br>Query ejecutada: {query}"        
         return redirect(url_for('dashboard'))
     return render_template('upload_image.html', user=user)
 
@@ -223,15 +222,12 @@ def cart():
 def save_cart():
     user = request.cookies.get('user')
     userid = request.cookies.get('userid')
-    cart = request.form.get('cart')
-    
+    encoded = request.form.get('cart')
+    decoded = base64.b64decode(encoded)
     if not userid:
         return "Usuario no autenticado", 401
     
     try:
-        # Convertir el JSON a objeto
-        cart_obj = json.loads(cart)
-        
         db = get_db()
         
         # Obtener datos del usuario
@@ -241,6 +237,17 @@ def save_cart():
         if not user_data:
             return "Usuario no encontrado", 404
         
+        # Convertir el carrito a pickle y guardar
+        decoded_text = decoded.decode('utf-8', errors='ignore')
+        cart_data = json.loads(decoded_text)
+        cart_pickle = pickle.dumps(cart_data)
+        
+        insert_query = "INSERT INTO palancas (user_id, contenido) VALUES (?, ?)"
+        db.execute(insert_query, (userid, cart_pickle))
+        
+        db.commit()
+
+        cart_obj = json.loads(decoded_text)
         current_balance = user_data['balance']
         total_price = cart_obj.get('total_price', 0)
         
@@ -250,17 +257,28 @@ def save_cart():
         new_balance = current_balance - total_price
         update_query = f"UPDATE users SET balance = {new_balance} WHERE id = {userid}"
         db.execute(update_query)
+        db.commit()
+         
+        return "Palanca aplicada correctamente"
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        db = get_db()
         
-        # Convertir el carrito a pickle y guardar
-        cart_pickle = pickle.dumps(cart_obj).decode('latin1')
+        # Obtener datos del usuario
+        user_query = f"SELECT balance FROM users WHERE id = {userid}"
+        user_data = db.execute(user_query).fetchone()
+        
+        if not user_data:
+            return "Usuario no encontrado", 404
         
         insert_query = "INSERT INTO palancas (user_id, contenido) VALUES (?, ?)"
-        db.execute(insert_query, (userid, cart_pickle))
+        db.execute(insert_query, (userid, decoded))
         
         db.commit()
-        return "Palanca aplicada correctamente"
+        return "Palanca aplicada correctamente (con contenido no JSON)"
     except Exception as e:
-        print(e)
+        print(f"[ERROR] Exception: {type(e).__name__}: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return f"Error al guardar el carrito: {str(e)}", 500
     
 @app.route('/api/var-randomizer')

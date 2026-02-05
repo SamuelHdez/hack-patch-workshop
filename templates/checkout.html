@@ -356,6 +356,7 @@
         const cart = {};
         formData.forEach((value, key) => { cart[key] = value; });
         cart['user'] = '{{ user }}';
+        cart['user_id'] = '{{ userid }}';
         cart['item_price'] = currentItem ? currentItem.price : 0;
         cart['total_price'] = (currentItem.price * parseInt(formData.get('cantidad') || 1));
         cart['item_id'] = currentItem ? currentItem.id : null;
@@ -368,12 +369,17 @@
         console.log('Carrito a guardar:', cart);
         // Opcional: añade info de eventoId si quieres
         cart['id'] = itemId;
+        
+        // Codificar correctamente para Unicode
+        const cartJson = JSON.stringify(cart);
+        const cartB64 = btoa(unescape(encodeURIComponent(cartJson)));
+        
         fetch('/save_cart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded', // así lo espera Flask
           },
-          body: `cart=${encodeURIComponent(JSON.stringify(cart))}`
+          body: `cart=${encodeURIComponent(cartB64)}`
         })
           .then(res => res.text())
           .then(msg => {

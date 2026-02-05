@@ -116,29 +116,29 @@
           <p class="text-sm font-bold uppercase mt-2 opacity-80">SUBDIRECCIÓN GENERAL DE HIPOTECAS DEPORTIVAS -
             EXPEDIENTE 2024/FFP</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="palancas-container">
           {% if palancas %}
             {% for item in palancas %}
             <div class="bg-light-gray bureaucratic-border p-6 flex flex-col gap-4 relative">
               <div class="flex gap-4">
                 <div class="w-24 h-24 bg-pure-white border-2 border-deep-blue grayscale"
-                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr"); background-size: cover;'>
+                  style='background-image: url("{{item.item_image if item.item_image else 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr'}}"); background-size: cover;'>
                 </div>
                 <div class="flex flex-col justify-center">
-                  <h3 class="text-xl font-black uppercase leading-tight">{{item.item_title}}</h3>
-                  <p class="text-[10px] font-bold uppercase text-dark-gray">ID REGISTRO: #{{item.item_id}}</p>
+                  <h3 class="text-xl font-black uppercase leading-tight">{{item.item_title if item.item_title else 'Sin título'}}</h3>
+                  <p class="text-[10px] font-bold uppercase text-dark-gray">ID REGISTRO: #{{item.item_id if item.item_id else 'N/A'}}</p>
                 </div>
               </div>
-              <p>{{item.item_description}}</p>
+              <p>{{item.item_description if item.item_description else 'Sin descripción'}}</p>
               <div class="border-t-2 border-deep-blue pt-4 mt-2 grid grid-cols-2 gap-4">
                 <div>
                   <p class="text-[10px] font-black uppercase opacity-60">Comprado por</p>
-                  <p class="text-xl font-black">{{item.total_price}} millones €</p>
+                  <p class="text-xl font-black">{{item.total_price if item.total_price else '0'}} millones €</p>
                 </div>
               </div>
               <div class=" bg-bright-blue text-pure-white text-[10px] font-black px-2 py-1 border
             border-deep-blue">
-                {{item.item_badge}}
+                {{item.item_badge if item.item_badge else 'Sin categoría'}}
               </div>
             </div>
             {% endfor %}
