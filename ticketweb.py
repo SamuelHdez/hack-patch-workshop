@@ -262,16 +262,6 @@ def save_cart():
     except Exception as e:
         print(e)
         return f"Error al guardar el carrito: {str(e)}", 500
-
-@app.route('/load_cart')
-def load_cart():
-    try:
-        with open('cart.pkl', 'rb') as f:
-            cart = pickle.load(f)
-        return f"{cart}"
-    except Exception as e:
-        print(e)
-        return "Error al cargar carrito"
     
 @app.route('/api/var-randomizer')
 def var_randomizer():
@@ -292,7 +282,7 @@ def logs():
 def debug():
     if ENV == 'prod':
         return "No disponible en producción"
-    return jsonify({'debug': 'vars', 'env': ENV,'useradmin':'admin','adminpass':'admin', 'status':'Eres un chafardero, no deberias ver esto...','category':'golismeador'})
+    return jsonify({'debug': 'vars', 'env': ENV,'useradmin':'tebas','adminpass':'4qu3d4rs1n1nt3rn3tcu4nd0h4yp4rt1d0', 'status':'Eres un chafardero, no deberias ver esto...','category':'golismeador'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
