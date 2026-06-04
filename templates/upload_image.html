@@ -118,9 +118,8 @@
                         enemigos conlleva una multa de 2 puntos en el límite salarial.</p>
                 </div>
                 <div class="flex flex-col gap-4">
-                    <button type="submit"
-                        class="w-full bg-bright-blue text-pure-white font-black py-6 border-4 border-deep-blue text-xl uppercase tracking-widest hover:brightness-110 active:translate-y-1 transition-all shadow-[6px_6px_0px_0px_rgba(3,55,120,1)]"
-                        type="button">
+                    <button id="submit-btn" type="submit" disabled
+                        class="w-full bg-bright-blue text-pure-white font-black py-6 border-4 border-deep-blue text-xl uppercase tracking-widest hover:brightness-110 active:translate-y-1 transition-all shadow-[6px_6px_0px_0px_rgba(3,55,120,1)] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:translate-y-0">
                         VINCULAR URL A LA DEUDA DEL CLUB
                     </button>
                 </div>
@@ -152,6 +151,13 @@
         </div>
     </div>
 
+<script>
+    const input = document.querySelector('input[name="image_url"]');
+    const btn = document.getElementById('submit-btn');
+    input.addEventListener('input', () => {
+        btn.disabled = input.value.trim() === '';
+    });
+</script>
 </body>
 
 </html>

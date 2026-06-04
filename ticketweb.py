@@ -200,7 +200,9 @@ def upload_image():
     user = request.cookies.get('user')
     userid = request.cookies.get('userid')
     if request.method == 'POST':
-        url = request.form['image_url']
+        url = request.form.get('image_url', '').strip()
+        if not url:
+            return redirect(url_for('upload_image'))
         db = get_db()
         query = f"UPDATE users SET avatar = '{url}' WHERE id = {userid}"
         try:
