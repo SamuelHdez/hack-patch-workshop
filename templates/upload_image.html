@@ -1,163 +1,360 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Tebasaenterar - Actualización de Imagen Administrativa</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        "dark-gray": "#515455",
-                        "deep-blue": "#033778",
-                        "light-gray": "#b1b0b1",
-                        "bright-blue": "#00aadb",
-                        "pure-white": "#ffffff",
-                    },
-                    fontFamily: {
-                        "display": ["Lexend"]
-                    },
-                    borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
-                },
-            },
-        }
-    </script>
-    <style type="text/tailwindcss">
-        body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #ffffff;
-            color: #033778;
-        }
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #033778;
-            color: #ffffff;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            z-index: 50;
-            border-top: 2px solid #00aadb;
-        }
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker 45s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        input:focus {
-            outline: none !important;
-            ring: 0 !important;
-            border-color: #00aadb !important;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — Petición de Cambio de Imagen Administrativa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <style>
+    /* Hallmark · genre: playful · macrostructure: Long Document
+     * theme: adapted-Hum (brand-anchored) · nav: N1b · footer: Ft2
+     * tone: satírico-burocrático + playful · anchor hue: oklch(62% 0.15 215)
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     * pre-emit critique: P4 H5 E5 S5 R5 V5
+     */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* nav: ver /static/css/nav.css */
+
+    /* ─── Main ─── */
+    .page-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-2xl) var(--space-xl);
+    }
+    .doc-wrap {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Document header strip */
+    .doc-header {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-xl);
+      border: 3px solid var(--color-ink);
+      border-bottom: none;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-xl);
+    }
+    .doc-header__ref {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: oklch(65% 0.06 215);
+      margin-bottom: var(--space-sm);
+    }
+    .doc-header__title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .doc-header__title span { color: var(--color-pop); }
+    .doc-header__protocol {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: oklch(65% 0.06 215);
+      margin-top: var(--space-md);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .doc-header__seal {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--color-pop);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transform: rotate(-5deg);
+    }
+    .doc-header__seal-text {
+      font-family: var(--font-display);
+      font-size: 8px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-pop);
+      line-height: 1.3;
+    }
+
+    /* Document body */
+    .doc-body {
+      background-color: var(--color-paper-2);
+      border: 3px solid var(--color-ink);
+      border-top: 2px solid var(--color-border);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    /* Field */
+    .field { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .field__label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-ink-2);
+      line-height: 1;
+    }
+    .field__input {
+      width: 100%;
+      height: 56px;
+      padding: 0 var(--space-lg);
+      background-color: var(--color-paper);
+      border: 2px solid var(--color-border);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 600;
+      outline: 2px solid transparent;
+      outline-offset: 1px;
+      transition: border-color var(--dur-micro) var(--ease-out),
+                  outline-color var(--dur-micro) var(--ease-out);
+    }
+    .field__input::placeholder { color: var(--color-ink-3); font-weight: 400; font-size: var(--text-sm); }
+    .field__input:hover { border-color: var(--color-ink-2); }
+    .field__input:focus {
+      border-color: var(--color-focus);
+      outline-color: var(--color-focus);
+      background-color: var(--color-paper);
+    }
+    .field__helper {
+      min-height: 1lh;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-style: normal;
+      color: var(--color-ink-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      height: 60px;
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      border: 2px solid var(--color-ink);
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 1;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .btn-submit:hover:not(:disabled) { background-color: var(--color-accent-2); }
+    .btn-submit:active:not(:disabled) { transform: translateY(2px); }
+    .btn-submit:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .btn-submit:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background-color: var(--color-ink-3);
+    }
+
+    /* Legal note */
+    .legal-note {
+      border: 2px solid var(--color-ink);
+      border-top: none;
+      background-color: var(--color-paper);
+      padding: var(--space-lg) var(--space-xl);
+      position: relative;
+    }
+    .legal-note__tag {
+      position: absolute;
+      top: -13px;
+      left: var(--space-lg);
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 2px 8px;
+    }
+    .legal-note__text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-ink-2);
+      line-height: 1.8;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── Footer Ft2 inline ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-ink-3);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .footer-text a {
+      color: var(--color-ink-2);
+      text-decoration: none;
+      transition: color var(--dur-micro) var(--ease-out);
+    }
+    .footer-text a:hover { color: var(--color-accent); }
+    .footer-text a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner  { padding: 0 var(--space-lg); }
+      .nav-links  { display: none; }
+      .page-main  { padding: var(--space-xl) var(--space-lg); }
+    }
+    @media (max-width: 40rem) {
+      .nav-inner  { padding: 0 var(--space-md); }
+      .page-main  { padding: var(--space-xl) var(--space-md); }
+      .doc-header { flex-direction: column; gap: var(--space-md); padding: var(--space-lg); }
+      .doc-header__seal { display: none; }
+      .doc-header__title { font-size: var(--text-2xl); }
+      .doc-body   { padding: var(--space-lg); }
+      .site-footer { padding: var(--space-md); flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 150ms !important; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-pure-white">
-    <header
-        class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-20 lg:px-40 py-4">
-        <div class="flex items-center justify-between whitespace-nowrap">
-            <div class="flex items-center gap-8">
-                <a href="/">
-                    <div class="flex items-center gap-4 text-deep-blue">
-                        <div class="size-8">
-                            <span class="material-symbols-outlined text-4xl">sports_soccer</span>
-                        </div>
-                        <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
-                            Tebasaenterar
-                        </h2>
-                    </div>
-                </a>
-                <nav class="hidden lg:flex items-center gap-9">
-                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-                        href="/">Boletín Oficial</a>
-                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-                        href="/marketplace">Mercado de Palancas</a>
-                </nav>
-            </div>
-            <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
-                <a href="/dashboard">
-                    <div
-                        class="flex items-center gap-2 text-deep-blue font-black uppercase text-xs tracking-widest bg-light-gray px-4 py-2 border-2 border-deep-blue">
-                        <span class="material-symbols-outlined text-sm">person</span>
-                        <span>Expediente: #{{user}}</span>
-                    </div>
-                </a>
-            </div>
+  {% include 'partials/nav.html' %}
+
+  <!-- Main: Long Document macrostructure -->
+  <main class="page-main" aria-labelledby="doc-title">
+    <div class="doc-wrap">
+
+      <!-- Document header -->
+      <div class="doc-header">
+        <div>
+          <p class="doc-header__ref">TEBASAENTERAR S.A. · Protocolo 22-B · Ref: IMG-{{ loop.index if loop else '0042' }}</p>
+          <h1 class="doc-header__title" id="doc-title">
+            Petición de<br><span>Cambio de Imagen</span>
+          </h1>
+          <p class="doc-header__protocol">Expediente de Vinculación de Activos Visuales Externos</p>
         </div>
-    </header>
-    <main class="max-w-[800px] mx-auto pt-12 pb-32 px-4">
-        <div class="bg-light-gray border-4 border-deep-blue p-8 shadow-[8px_8px_0px_0px_rgba(3,55,120,1)]">
-            <div class="border-b-4 border-deep-blue pb-4 mb-8">
-                <h1 class="text-deep-blue text-3xl font-black uppercase tracking-tighter">PETICIÓN DE CAMBIO DE IMAGEN
-                    ADMINISTRATIVA</h1>
-                <p class="text-dark-gray font-bold uppercase text-[10px] tracking-[0.2em] mt-2">Expediente de
-                    Vinculación de Activos Visuales Externos (Protocolo 22-B)</p>
-            </div>
-            <form class="flex flex-col gap-8" method="post">
-                <div class="flex flex-col gap-3">
-                    <label class="text-deep-blue font-black uppercase tracking-widest text-xs flex items-center gap-2">
-                        <span class="material-symbols-outlined text-base">link</span>
-                        URL del Recurso Visual (Avatar)
-                    </label>
-                    <input name="image_url"
-                        class="w-full bg-pure-white border-4 border-deep-blue p-5 text-deep-blue font-bold text-lg placeholder:text-light-gray placeholder:font-normal focus:border-bright-blue transition-all"
-                        placeholder="https://servidor-externo-sin-fiscalizar.com/foto.jpg" type="url" />
-                    <p class="text-[10px] text-dark-gray font-bold uppercase italic">Aviso: El uso de URLs de servidores
-                        enemigos conlleva una multa de 2 puntos en el límite salarial.</p>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <button id="submit-btn" type="submit" disabled
-                        class="w-full bg-bright-blue text-pure-white font-black py-6 border-4 border-deep-blue text-xl uppercase tracking-widest hover:brightness-110 active:translate-y-1 transition-all shadow-[6px_6px_0px_0px_rgba(3,55,120,1)] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:translate-y-0">
-                        VINCULAR URL A LA DEUDA DEL CLUB
-                    </button>
-                </div>
-            </form>
+        <div class="doc-header__seal" aria-hidden="true">
+          <span class="doc-header__seal-text">ACTIVO<br>VISUAL<br>22-B</span>
         </div>
-        <div class="mt-8 p-6 bg-pure-white border-2 border-deep-blue relative">
-            <div class="absolute -top-3 left-6 bg-deep-blue text-pure-white px-2 py-1 text-[10px] font-black uppercase">
-                Nota Legal</div>
-            <p class="text-[11px] text-dark-gray leading-relaxed">
-                Al hacer clic en vincular, usted acepta que su imagen sea propiedad intelectual de la liga durante un
-                periodo no inferior a 50 años, prorrogable automáticamente si el club decide activar una palanca de
-                marketing. Tebasaenterar no se hace responsable de la pixelación causada por la mala conexión en
-                estadios de segunda división.
+      </div>
+
+      <!-- Document body (form) -->
+      <div class="doc-body">
+        <form method="post" novalidate>
+
+          <div class="field">
+            <label class="field__label" for="image_url">
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">link</span>
+              URL del Recurso Visual (Avatar)
+            </label>
+            <input class="field__input"
+              type="url"
+              id="image_url"
+              name="image_url"
+              placeholder="https://servidor-externo-sin-fiscalizar.com/foto.jpg"
+              autocomplete="off">
+            <p class="field__helper">
+              Aviso: El uso de URLs de servidores enemigos conlleva una multa de 2 puntos en el límite salarial.
             </p>
-        </div>
-    </main>
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <span class="mx-6 font-black uppercase text-bright-blue">[ALERTA]</span> Nuevo límite salarial calculado con
-            una calculadora solar defectuosa...
-            <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> El VAR confirma que el perfil de
-            usuario es 100% legal...
-            <span class="mx-6 font-black uppercase text-bright-blue">[REGISTRO]</span> Se buscan herederos para deuda de
-            2050...
-            <span class="mx-6 font-black uppercase text-bright-blue">[INTERNO]</span> Actualización de foto requerida
-            para evitar descenso administrativo...
-            <span class="mx-6 font-black uppercase text-bright-blue">[MEMO]</span> Los cambios en el nombre del
-            presidente tardarán 4-6 palancas en procesarse...
-        </div>
+          </div>
+
+          <button id="submit-btn" type="submit" class="btn-submit" disabled style="margin-top:var(--space-xl)">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">link</span>
+            Vincular URL a la Deuda del Club
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Legal note -->
+      <div class="legal-note" role="note">
+        <span class="legal-note__tag">Nota Legal</span>
+        <p class="legal-note__text">
+          Al hacer clic en vincular, usted acepta que su imagen sea propiedad intelectual de la liga durante un periodo no inferior a 50 años, prorrogable automáticamente si el club decide activar una palanca de marketing. Tebasaenterar no se hace responsable de la pixelación causada por la mala conexión en estadios de segunda división.
+        </p>
+      </div>
+
     </div>
+  </main>
 
-<script>
+  <!-- Footer Ft2 inline -->
+  <footer class="site-footer">
+    <p class="footer-text">&#169; 2026 <a href="/">Tebasaenterar</a> · Protocolo 22-B</p>
+    <p class="footer-text"><a href="/dashboard">Volver al expediente</a></p>
+  </footer>
+
+  <script>
     const input = document.querySelector('input[name="image_url"]');
-    const btn = document.getElementById('submit-btn');
-    input.addEventListener('input', () => {
-        btn.disabled = input.value.trim() === '';
-    });
-</script>
-</body>
+    const btn   = document.getElementById('submit-btn');
 
+    function isValidUrl(str) {
+      try {
+        const u = new URL(str.trim());
+        return u.protocol === 'http:' || u.protocol === 'https:';
+      } catch (_) {
+        return false;
+      }
+    }
+
+    input.addEventListener('input', () => {
+      btn.disabled = !isValidUrl(input.value);
+    });
+  </script>
+
+</body>
 </html>

@@ -1,377 +1,848 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Tebasaenterar - Financial Gymnastics &amp; Parody</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "dark-gray": "#515455",
-            "deep-blue": "#033778",
-            "light-gray": "#b1b0b1",
-            "bright-blue": "#00aadb",
-            "pure-white": "#ffffff",
-          },
-          fontFamily: {
-            "display": ["Lexend"]
-          },
-          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
-        },
-      },
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — Sistema Oficial de Supervisión de Palancas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <style>
+    /* Hallmark · genre: playful · macrostructure: Bento Grid
+     * theme: adapted-Hum (brand-anchored) · nav: N12 · footer: Ft8
+     * tone: satírico-burocrático + playful · anchor hue: oklch(62% 0.15 215)
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     * pre-emit critique: P4 H5 E4 S5 R4 V5
+     */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      line-height: 1.5;
     }
-  </script>
+
+    /* ─── Banner N12 p.1 ─── */
+    .banner {
+      background-color: var(--color-alert);
+      color: var(--color-alert-ink);
+      padding: 10px var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      position: relative;
+      min-height: var(--banner-height);
+    }
+    .banner__badge {
+      background-color: var(--color-alert-ink);
+      color: var(--color-alert);
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+    .banner__text { white-space: nowrap; }
+    .banner__dismiss {
+      position: absolute;
+      right: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--color-alert-ink);
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      opacity: 0.8;
+      transition: opacity var(--dur-micro) var(--ease-out);
+    }
+    .banner__dismiss:hover { opacity: 1; }
+    .banner__dismiss:focus-visible {
+      outline: 2px solid var(--color-alert-ink);
+      outline-offset: 2px;
+    }
+
+    /* ─── Nav N12 p.2 ─── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-nav);
+      background-color: var(--color-paper);
+      border-bottom: 3px solid var(--color-ink);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      text-decoration: none;
+      color: var(--color-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .nav-brand:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      margin-left: var(--space-xl);
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--color-ink-2);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+      transition: color var(--dur-micro) var(--ease-out);
+      line-height: 1;
+    }
+    .nav-links a:hover { color: var(--color-accent); }
+    .nav-links a[aria-current="page"] {
+      color: var(--color-ink);
+      border-bottom: 3px solid var(--color-accent);
+      padding-bottom: 2px;
+    }
+    .nav-links a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .nav-cta { margin-left: auto; }
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 10px var(--space-lg);
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border: 2px solid var(--color-ink);
+      white-space: nowrap;
+      line-height: 1;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-nav:hover { background-color: var(--color-accent-2); }
+    .btn-nav:active { transform: translateY(1px); }
+    .btn-nav:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ─── Contenedor ─── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+    }
+
+    /* ─── Hero Stat-Led ─── */
+    .hero {
+      padding: var(--space-2xl) 0 var(--space-xl);
+      border-bottom: 3px solid var(--color-ink);
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+      padding: 4px 12px;
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: var(--space-lg);
+      line-height: 1.6;
+    }
+    .hero__layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--space-2xl);
+    }
+    .hero__stat {
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      font-weight: 900;
+      color: var(--color-ink);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .hero__stat-currency {
+      font-size: 0.45em;
+      vertical-align: 0.15em;
+      color: var(--color-accent);
+    }
+    .hero__headline {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-top: var(--space-md);
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .hero__meta {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-ink-2);
+      margin-top: var(--space-md);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .hero__right {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+      align-items: flex-end;
+      padding-bottom: var(--space-sm);
+    }
+    .hero__aside-block { text-align: right; }
+    .hero__aside-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-ink-2);
+    }
+    .hero__aside-value {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--color-ink);
+      line-height: 1.05;
+    }
+    .hero__aside-value--alert { color: var(--color-alert); }
+
+    /* ─── Bento Grid ─── */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-sm);
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+    .tile {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--dur-short) var(--ease-out);
+    }
+    .tile:hover { transform: translateY(-3px); }
+    .tile--2x1 { grid-column: span 2; }
+    .tile--1x2 { grid-row: span 2; }
+    .tile--2x2 { grid-column: span 2; grid-row: span 2; }
+    .tile--dark {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .tile--accent {
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+    }
+    .tile--pop {
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+    }
+    .tile--paper { background-color: var(--color-paper); }
+    .tile--paper-3 { background-color: var(--color-paper-3); }
+
+    .tile__label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-md);
+    }
+    .tile--dark .tile__label   { color: oklch(65% 0.06 215); }
+    .tile--accent .tile__label { color: oklch(90% 0.05 215); }
+    .tile--pop .tile__label    { color: oklch(35% 0.07 95); }
+
+    .tile__number {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .tile__number--alert { color: var(--color-alert); }
+
+    .tile__sub {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-ink-2);
+      margin-top: var(--space-sm);
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .tile--dark .tile__sub   { color: oklch(65% 0.06 215); }
+    .tile--accent .tile__sub { color: oklch(90% 0.05 215); }
+
+    .tile__title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-top: var(--space-md);
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .tile__body {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--color-ink-2);
+      margin-top: var(--space-sm);
+    }
+    .tile--dark .tile__body { color: oklch(72% 0.04 215); }
+
+    .tile__tag {
+      display: inline-block;
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 3px 8px;
+      border: 1px solid var(--color-ink);
+      white-space: nowrap;
+    }
+    .tile__tag--dark { background-color: var(--color-ink); color: var(--color-paper); }
+    .tile--dark .tile__tag {
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+      border-color: var(--color-pop);
+    }
+    .tile__icon-bg {
+      position: absolute;
+      bottom: var(--space-md);
+      right: var(--space-md);
+      font-size: 5rem;
+      opacity: 0.07;
+      user-select: none;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .tile__img {
+      display: block;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      filter: grayscale(100%);
+      border: 2px solid var(--color-ink);
+      margin-top: var(--space-md);
+    }
+    .tile__metrics {
+      display: flex;
+      flex-direction: column;
+      margin-top: var(--space-lg);
+    }
+    .tile__metric {
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-md) 0;
+    }
+    .tile--dark .tile__metric { border-top-color: oklch(30% 0.07 252); }
+    .tile__metric-value {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .tile__metric-value--pop { color: var(--color-pop); }
+    .tile__metric-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(65% 0.06 215);
+      margin-top: 4px;
+    }
+
+    /* VAR Tool */
+    .var-circular {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: oklch(72% 0.04 215);
+      line-height: 1.65;
+      margin-top: var(--space-lg);
+    }
+    .var-result {
+      background-color: oklch(14% 0.08 252);
+      border: 1px solid oklch(30% 0.07 252);
+      padding: var(--space-md) var(--space-lg);
+      margin: var(--space-lg) 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-pop);
+      font-weight: 700;
+      line-height: 1.5;
+      min-height: 3.5rem;
+    }
+    .btn-var {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 14px var(--space-xl);
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 2px solid var(--color-paper);
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 1;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .btn-var:hover { background-color: oklch(76% 0.20 95); }
+    .btn-var:active { transform: translateY(1px); }
+    .btn-var:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-var:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 2px; }
+
+    /* ─── Footer Ft8 ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+    }
+    .footer-col-title {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-accent);
+      margin-bottom: var(--space-md);
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .footer-col ul li a {
+      text-decoration: none;
+      color: oklch(70% 0.04 215);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color var(--dur-micro) var(--ease-out);
+    }
+    .footer-col ul li a:hover { color: var(--color-paper); }
+    .footer-col ul li a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+    .footer-marquee {
+      border-top: 2px solid oklch(28% 0.07 252);
+      padding: 10px 0;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 50s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: 0 var(--space-xl);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(60% 0.05 215);
+    }
+    .marquee-item strong { color: var(--color-pop); font-weight: 900; }
+    .marquee-item::after { content: '·'; margin-left: var(--space-lg); color: oklch(35% 0.06 252); }
+
+    .footer-meta {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-xl);
+      border-top: 1px solid oklch(28% 0.07 252);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .footer-meta p {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: oklch(48% 0.05 252);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner  { padding: 0 var(--space-lg); }
+      .page-wrap  { padding: 0 var(--space-lg); }
+      .nav-links  { display: none; }
+      .hero__layout { grid-template-columns: minmax(0, 1fr); }
+      .hero__right  { display: none; }
+      .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tile--2x2 { grid-column: span 2; }
+      .footer-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 40rem) {
+      .banner     { padding: var(--space-sm) var(--space-md); gap: var(--space-sm); }
+      .banner__text    { display: none; }
+      .banner__dismiss { display: none; }
+      .nav-inner  { padding: 0 var(--space-md); }
+      .page-wrap  { padding: 0 var(--space-md); }
+      .hero       { padding: var(--space-xl) 0 var(--space-lg); }
+      .hero__stat { font-size: clamp(3rem, 2rem + 10vw, 4.5rem); }
+      .bento      { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
+      .tile--2x1, .tile--2x2 { grid-column: span 1; }
+      .tile--1x2  { grid-row: span 1; }
+      .tile       { padding: var(--space-lg); }
+      .tile__img  { height: 140px; }
+      .footer-links { grid-template-columns: minmax(0, 1fr); padding: var(--space-xl) var(--space-md); }
+      .footer-meta  { padding: var(--space-md); flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ─── Reduced motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 150ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+      .marquee-track { animation: none; }
+      .tile:hover    { transform: none; }
+    }
+  </style>
   <script>
     function tirarParaOtroEscandalo() {
       const btn = document.getElementById('randomizer-btn');
       const ctx = document.getElementById('circular-context');
       const res = document.getElementById('result-text');
 
-      // Estado visual de carga (burocracia lenta)
       btn.disabled = true;
-      res.innerText = "...REVISANDO CON NEGREIRA...";
-      res.classList.add('animate-pulse');
+      res.textContent = '...REVISANDO CON NEGREIRA...';
 
       fetch('/api/var-randomizer')
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
-          // Simulamos un breve retraso para dar efecto de "pensamiento arbitral"
           setTimeout(() => {
-            ctx.innerText = `De acuerdo con la ${data.circular_code}: ${data.context}`;
-            res.innerText = `"${data.result_text}"`;
-
-            res.classList.remove('animate-pulse');
+            ctx.textContent = 'De acuerdo con la ' + data.circular_code + ': ' + data.context;
+            res.textContent = '"' + data.result_text + '"';
             btn.disabled = false;
           }, 500);
         })
-        .catch(err => {
-          console.error('Error en el VAR:', err);
-          res.innerText = "ERROR: El árbitro se ha ido al baño.";
+        .catch(() => {
+          res.textContent = 'ERROR: El árbitro se ha ido al baño.';
           btn.disabled = false;
         });
     }
+
+    function dismissBanner() {
+      var b = document.getElementById('promo-banner');
+      if (b) b.remove();
+    }
   </script>
-  <style type="text/tailwindcss">
-    body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #ffffff;
-            color: #033778;
-        }
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #033778;
-            color: #ffffff;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            z-index: 50;
-            border-top: 2px solid #00aadb;
-        }
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker 45s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        input::placeholder {
-            color: #515455 !important;
-        }
-    </style>
 </head>
+<body>
 
-<body class="min-h-screen">
-  <header
-    class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-20 lg:px-40 py-4">
-    <div class="flex items-center justify-between whitespace-nowrap">
-      <div class="flex items-center gap-8">
-        <a href="/">
-          <div class="flex items-center gap-4 text-deep-blue">
-            <div class="size-8">
-              <span class="material-symbols-outlined text-4xl">sports_soccer</span>
-            </div>
-            <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
-              Tebasaenterar
-            </h2>
-          </div>
-        </a>
-        <nav class="hidden lg:flex items-center gap-9">
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/">Boletín Oficial</a>
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/marketplace">Mercado de Palancas</a>
-          {% if user %}
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/palancas">Mis palancas</a>
-          {% endif %}
-        </nav>
-      </div>
-      <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
-        {% if user %}
-        <a href="/dashboard"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Expediente: #{{user}}</span>
-        </a>
-        {% else %}
-        <a href="/login"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Iniciar Sesión</span>
-        </a>
-        {% endif %}
-
-      </div>
-    </div>
-  </header>
-  <main class="max-w-[1200px] mx-auto pb-32">
-    <div class="px-4 py-8">
-      <div class="@container">
-        <div class="flex flex-col gap-8 py-10 @[864px]:flex-row">
-          <div class="w-full bg-center bg-no-repeat aspect-video bg-cover border-4 border-deep-blue @[864px]:w-2/3"
-            data-alt="Satirical montage of Javier Tebas holding an NFT Panini sticker"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr");'>
-            <div
-              class="w-full h-full bg-gradient-to-t from-deep-blue/90 via-transparent to-transparent flex items-end p-8">
-              <span
-                class="bg-bright-blue text-pure-white text-xs font-black px-4 py-2 uppercase tracking-[0.2em] border-2 border-deep-blue">Boletín
-                Oficial</span>
-            </div>
-          </div>
-          <div class="flex flex-col gap-8 @[864px]:w-1/3 justify-center">
-            <div class="flex flex-col gap-4 text-left">
-              <h1 class="text-deep-blue text-4xl font-black leading-[1.1] tracking-tighter uppercase">
-                Anuncio de Tebas: Jugadores Cambiados por Pegatinas NFT
-              </h1>
-              <h2 class="text-dark-gray text-base font-medium leading-relaxed border-l-4 border-light-gray pl-4">
-                Un paso revolucionario en la gestión del Fair Play Financiero. Se anima a los clubes con patrimonio
-                negativo a
-                vender sus derechos sobre el césped del estadio antes del martes. Los NFTs son el futuro. ¡Aprovecha
-                esta oportunidad única!
-              </h2>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mb-12">
-      <div class="flex flex-col gap-3 p-8 border-4 border-deep-blue bg-light-gray relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-2 opacity-20">
-          <span class="material-symbols-outlined text-7xl text-deep-blue">trending_up</span>
-        </div>
-        <p class="text-deep-blue text-xs font-black uppercase tracking-[0.2em]">Medidor de Deuda CVC</p>
-        <p class="text-deep-blue tracking-tighter text-4xl font-black leading-tight">€2.74 Billones</p>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-bright-blue font-bold">arrow_upward</span>
-          <p class="text-bright-blue text-sm font-black uppercase tracking-wider">+15.4% desde el desayuno</p>
-        </div>
-      </div>
-      <div class="flex flex-col gap-3 p-8 border-4 border-deep-blue bg-light-gray relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-2 opacity-20">
-          <span class="material-symbols-outlined text-7xl text-deep-blue">published_with_changes</span>
-        </div>
-        <p class="text-deep-blue text-xs font-black uppercase tracking-[0.2em]">Palancas activas</p>
-        <p class="text-deep-blue tracking-tighter text-4xl font-black leading-tight">42 / ∞</p>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-bright-blue font-bold">add</span>
-          <p class="text-bright-blue text-sm font-black uppercase tracking-wider">3 pendientes de aprobación</p>
-        </div>
-      </div>
-      <div class="flex flex-col gap-3 p-8 border-4 border-deep-blue bg-light-gray relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-2 opacity-20">
-          <span class="material-symbols-outlined text-7xl text-deep-blue">error</span>
-        </div>
-        <p class="text-deep-blue text-xs font-black uppercase tracking-[0.2em]">Quejas VAR Hoy</p>
-        <p class="text-deep-blue tracking-tighter text-4xl font-black leading-tight">99,999+</p>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-bright-blue font-bold">trending_up</span>
-          <p class="text-bright-blue text-sm font-black uppercase tracking-wider">+99% vs Real Madrid</p>
-        </div>
-      </div>
-    </div>
-    <div class="px-4 pb-6 pt-10 flex justify-between items-end border-b-4 border-deep-blue mb-8">
-      <h2 class="text-deep-blue text-3xl font-black uppercase tracking-tighter">Palanca de la Semana</h2>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
-      <div class="@container">
-        <div
-          class="flex flex-col items-stretch justify-start bg-light-gray border-4 border-deep-blue @xl:flex-row overflow-hidden">
-          <div
-            class="w-full @xl:w-1/2 bg-center bg-no-repeat aspect-square bg-cover grayscale border-b-4 @xl:border-b-0 @xl:border-r-4 border-deep-blue"
-            data-alt="A dark stadium with neon Wi-Fi signals coming from the pitch"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCrAPLHWQpOF3Nde-YWDO3Ju13Mk56-t5w0Q9WvbRqkeCMLaM0cEGQZmcoTdvind8C90qZ553rpdtxP_kYP7GiitKqWETpHP36UVqWcnsBl8A6YRFbEjv1LIHYS7OVTjtd0SJho1XsV1LnbK8-476kK03EpQQ_tevvzUyIFzmcLDi_ZfbPOZ23a97_BK--5noLNoIURWzkP71EJcFrrkdWaJrdxMgSxCZmy33RnMxx6G6z0UBepOdZGk6O3C1m4YdkqiUw5iOSNBKHp");'>
-          </div>
-          <div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-4 p-8">
-            <div class="flex items-center gap-3">
-              <span
-                class="bg-bright-blue text-pure-white text-[10px] font-black px-3 py-1 border border-deep-blue uppercase tracking-widest">ACUERDO</span>
-              <p class="text-dark-gray text-[10px] font-black uppercase tracking-[0.2em]">Ganaremos más dinero</p>
-            </div>
-            <p class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">Colaboración con SurVPN
-            </p>
-            <p class="text-dark-gray text-sm font-medium leading-relaxed">Acuerdo con SurVPN con el código "CENSURA"
-              para aquellos usuarios que buscan poder navegar libremente en internet los días de partido. LALIGA y
-              SurVPN se reservaN el derecho a bloquear webs legales.</p>
-            <div class="flex items-center justify-between mt-6 pt-6 border-t-2 border-deep-blue">
-              <div class="flex flex-col">
-                <p class="text-deep-blue text-sm font-black uppercase tracking-wider">Beneficios: €100.0M</p>
-                <p class="text-dark-gray text-xs font-bold uppercase">Los blogs de recetas culinarias son nuestros
-                  enemigos</p>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="@container">
-        <div
-          class="flex flex-col items-stretch justify-start bg-light-gray border-4 border-deep-blue @xl:flex-row overflow-hidden">
-          <div
-            class="w-full @xl:w-1/2 bg-center bg-no-repeat aspect-square bg-cover grayscale border-b-4 @xl:border-b-0 @xl:border-r-4 border-deep-blue"
-            data-alt="Executive hand signing a contract with a crayon"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4ziXbr3hhZ702AIFgLSP_mwDM7XySbkgJBO9opmJEBcJy523puQs9gQrXO-8lmhX0ny02jJb8H40dQ_y1t3y0zqCu1xpPmy0U0MI8BTNRw79SgU-z8r2Ria9RChScZMz76Fx23BDP-rwLgaOMJFRPTKIJo8cHDNFin3ONUJO3yLN2Xx5C4UvBKS1ZcUd0Pa5KlGUcnVN5MPfED0lBv5IFowriMeOUAhJiGTsUXUH4pe1u01GvvM-R62lq_D9eY8QQhd7VYhjkIdMe");'>
-          </div>
-          <div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-4 p-8">
-            <div class="flex items-center gap-3">
-              <span
-                class="bg-deep-blue text-pure-white text-[10px] font-black px-3 py-1 border border-bright-blue uppercase tracking-widest">NOVEDAD</span>
-              <p class="text-dark-gray text-[10px] font-black uppercase tracking-[0.2em]">A POR ELLOS</p>
-            </div>
-            <p class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">Gana hasta 50€</p>
-            <p class="text-dark-gray text-sm font-medium leading-relaxed">Denuncia a tu bar de confianza en el que se
-              emitan partidos de LALIGA y gana hasta 50€ (LALIGA se reserva el derecho a no pagar). Juntos podemos
-              acabar con el pequeño empresario.</p>
-            <div class="flex items-center justify-between mt-6 pt-6 border-t-2 border-deep-blue">
-              <div class="flex flex-col">
-                <p class="text-deep-blue text-sm font-black uppercase tracking-wider">Beneficios: muchos</p>
-                <p class="text-dark-gray text-xs font-bold uppercase">Riesgo: ninguno</p>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="px-4 py-16">
-      <div class="bg-pure-white border-4 border-deep-blue p-10 flex flex-col md:flex-row items-center gap-10 relative">
-        <div
-          class="absolute -top-4 -left-4 bg-bright-blue text-pure-white px-4 py-1 text-xs font-black border-2 border-deep-blue uppercase tracking-widest">
-          Herramienta Burocrática
-        </div>
-        <div class="flex-1">
-          <h3 class="text-deep-blue text-3xl font-black mb-4 flex items-center gap-3 uppercase tracking-tighter">
-            <span class="material-symbols-outlined text-4xl">casino</span>
-            VAR RANDOMIZER™
-          </h3>
-          <p id="circular-context" class="text-dark-gray text-base font-bold mb-6">
-            De acuerdo con la Circular 42-B: Para la siguiente jornada el árbitro VAR declarará penalti a favor del
-            Madrid, incluso si el Madrid no se encuentra jugando el partido.
-          </p>
-          <div class="bg-light-gray p-6 border-2 border-deep-blue mb-8">
-            <p id="result-text" class="text-deep-blue italic text-lg font-black">"Penalti a favor del Madrid."</p>
-          </div>
-          <button id="randomizer-btn" onclick="tirarParaOtroEscandalo()"
-            class="bg-bright-blue text-pure-white font-black py-4 px-10 border-4 border-deep-blue flex items-center gap-3 hover:bg-deep-blue transition-colors uppercase tracking-widest text-sm active:translate-y-1">
-            <span class="material-symbols-outlined">autorenew</span> Tirar para otro escándalo
-          </button>
-        </div>
-        <div class="hidden md:flex w-56 h-56 bg-light-gray border-4 border-deep-blue items-center justify-center">
-          <span class="material-symbols-outlined text-9xl text-deep-blue opacity-80">visibility</span>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="bg-deep-blue text-pure-white border-t-4 border-bright-blue py-12 px-4 md:px-20 lg:px-40 pb-24">
-    <div class="max-w-[1200px] mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-        <div>
-          <h3 class="text-bright-blue font-black uppercase tracking-wider text-sm mb-4">Departamentos</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Oficina de Palancas</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Comité de Fair Play</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Gestión de NFTs</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Relaciones con CVC</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-bright-blue font-black uppercase tracking-wider text-sm mb-4">Legal (o algo así)</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Términos y Condiciones*</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Política de Privacidad**</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Circular 42-B</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Denuncias Anónimas</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-bright-blue font-black uppercase tracking-wider text-sm mb-4">Recursos</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Centro de Quejas VAR</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Calculadora de Deudas</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">Guía de Supervivencia FFP</a></li>
-            <li><a href="#" class="hover:text-bright-blue transition-colors">API de Escándalos</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-bright-blue font-black uppercase tracking-wider text-sm mb-4">Contacto Oficial</h3>
-          <ul class="space-y-2 text-sm">
-            <li class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-lg">mail</span>
-              <span>info@tebasaenterar.sindominio</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-lg">phone</span>
-              <span>900-PALANCA</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-lg">location_on</span>
-              <span>Barcelona (Oficina Opaca)</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        class="border-t-2 border-bright-blue pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-        <p class="text-light-gray">© 2026 TEBASAENTERAR | Todos los derechos reservados (y vendidos) | *Sujeto a cambios
-          sin previo aviso **No leemos los emails</p>
-
-      </div>
-    </div>
-  </footer>
-
-  <div class="ticker-wrap">
-    <div class="ticker">
-      <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> VAR confirma que el sol estaba
-      ligeramente demasiado
-      amarillo para un juego limpio...
-      <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> Tebas programa una reunión de emergencia
-      a medianoche
-      consigo mismo...
-      <span class="mx-6 font-black uppercase text-bright-blue">[DEBT WATCH]</span> €5.00 añadidos a la deuda nacional
-      cada
-      vez que suena un silbato...
-      <span class="mx-6 font-black uppercase text-bright-blue">[INTERNAL]</span> Real Madrid jugará el próximo partido
-      en una
-      isla flotante para evitar impuestos...
-      <span class="mx-6 font-black uppercase text-bright-blue">[MEMO]</span> El tope salarial ahora se mide en "vibras"
-      y
-      "promesas"...
-      <span class="mx-6 font-black uppercase text-bright-blue">[ASSET]</span> Registro de jugador exitoso después de
-      intercambiar 4 sillas de oficina y una impresora...
-    </div>
+  <!-- Banner N12 p.1 -->
+  <div class="banner" id="promo-banner" role="alert">
+    <span class="banner__badge">&#9888; Alerta palanca</span>
+    <span class="banner__text">Sistema en modo investigación · Circulares en vigor: 47 · Palancas aprobadas esta semana: 3</span>
+    <button class="banner__dismiss" onclick="dismissBanner()" aria-label="Cerrar alerta">&#215;</button>
   </div>
 
-</body>
+  <!-- Nav N12 p.2 -->
+  <nav class="site-nav" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.5rem;line-height:1">sports_soccer</span>
+        Tebasaenterar
+      </a>
+      <div class="nav-links">
+        <a href="/" aria-current="page">Boletín Oficial</a>
+        <a href="/marketplace">Mercado Palancas</a>
+        {% if user %}<a href="/palancas">Mis Palancas</a>{% endif %}
+      </div>
+      <div class="nav-cta">
+        {% if user %}
+        <a href="/dashboard" class="btn-nav">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">person</span>
+          Expediente&nbsp;#{{user}}
+        </a>
+        {% else %}
+        <a href="/login" class="btn-nav">Iniciar Sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 
+  <main>
+    <div class="page-wrap">
+
+      <!-- Hero Stat-Led -->
+      <section class="hero" aria-labelledby="hero-headline">
+        <div class="hero__eyebrow">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">shield</span>
+          Sistema Oficial de Supervisión · Temporada 2025/26
+        </div>
+        <div class="hero__layout">
+          <div>
+            <div class="hero__stat" aria-label="2.74 billones de euros de deuda total">
+              <span class="hero__stat-currency" aria-hidden="true">&#8364;</span>2.74B
+            </div>
+            <h1 class="hero__headline" id="hero-headline">
+              La deuda real del fútbol español, auditada en tiempo real.
+            </h1>
+            <p class="hero__meta">
+              Circular 2026/88 · Datos certificados por el VAR contable · +15.4% desde el desayuno
+            </p>
+          </div>
+          <div class="hero__right" aria-hidden="true">
+            <div class="hero__aside-block">
+              <p class="hero__aside-label">Palancas activas</p>
+              <p class="hero__aside-value">42&thinsp;/&thinsp;&#8734;</p>
+            </div>
+            <div class="hero__aside-block">
+              <p class="hero__aside-label">Quejas VAR hoy</p>
+              <p class="hero__aside-value hero__aside-value--alert">99k+</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bento Grid -->
+      <section class="bento" aria-label="Panel de control">
+
+        <!-- Deuda CVC: dark 2x2 -->
+        <article class="tile tile--dark tile--2x2">
+          <p class="tile__label">Medidor Deuda CVC</p>
+          <div class="tile__number">&#8364;2.74B</div>
+          <div class="tile__sub">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;color:var(--color-pop)">trending_up</span>
+            +15.4% desde el desayuno
+          </div>
+          <div class="tile__metrics">
+            <div class="tile__metric">
+              <div class="tile__metric-value">&#8364;47M</div>
+              <div class="tile__metric-label">Añadido esta jornada</div>
+            </div>
+            <div class="tile__metric">
+              <div class="tile__metric-value tile__metric-value--pop">&#161;RÉCORD!</div>
+              <div class="tile__metric-label">Temporadas en números rojos</div>
+            </div>
+          </div>
+          <span class="material-symbols-outlined tile__icon-bg" aria-hidden="true">trending_up</span>
+        </article>
+
+        <!-- Palancas: accent 1x1 -->
+        <article class="tile tile--accent">
+          <p class="tile__label">Palancas activas</p>
+          <div class="tile__number">42&thinsp;/&thinsp;&#8734;</div>
+          <div class="tile__sub">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem">add</span>
+            3 pendientes de aprobación
+          </div>
+          <span class="material-symbols-outlined tile__icon-bg" aria-hidden="true">published_with_changes</span>
+        </article>
+
+        <!-- Quejas VAR: paper 1x1 -->
+        <article class="tile tile--paper">
+          <p class="tile__label">Quejas VAR hoy</p>
+          <div class="tile__number tile__number--alert">99,999+</div>
+          <div class="tile__sub">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;color:var(--color-alert)">trending_up</span>
+            +99% vs Real Madrid
+          </div>
+          <span class="material-symbols-outlined tile__icon-bg" aria-hidden="true">error</span>
+        </article>
+
+        <!-- SurVPN: paper-3 1x2 -->
+        <article class="tile tile--paper-3 tile--1x2">
+          <span class="tile__tag">Acuerdo</span>
+          <div class="tile__title">Colaboración SurVPN</div>
+          <p class="tile__body">Acuerdo con SurVPN con el código "CENSURA" para navegar libremente los días de partido. LALIGA se reserva el derecho a bloquear webs legales.</p>
+          <img class="tile__img"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrAPLHWQpOF3Nde-YWDO3Ju13Mk56-t5w0Q9WvbRqkeCMLaM0cEGQZmcoTdvind8C90qZ553rpdtxP_kYP7GiitKqWETpHP36UVqWcnsBl8A6YRFbEjv1LIHYS7OVTjtd0SJho1XsV1LnbK8-476kK03EpQQ_tevvzUyIFzmcLDi_ZfbPOZ23a97_BK--5noLNoIURWzkP71EJcFrrkdWaJrdxMgSxCZmy33RnMxx6G6z0UBepOdZGk6O3C1m4YdkqiUw5iOSNBKHp"
+            alt="Palanca SurVPN — imagen ilustrativa" loading="lazy">
+          <div class="tile__sub" style="margin-top:var(--space-md)">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;color:var(--color-accent)">payments</span>
+            Beneficios: &#8364;100M
+          </div>
+        </article>
+
+        <!-- Gana 50€: paper 1x2 -->
+        <article class="tile tile--paper tile--1x2">
+          <span class="tile__tag tile__tag--dark">Novedad</span>
+          <div class="tile__title">Gana hasta 50&#8364;</div>
+          <p class="tile__body">Denuncia tu bar de confianza que emita partidos de LALIGA. Juntos podemos acabar con el pequeño empresario. LALIGA se reserva el derecho a no pagar.</p>
+          <img class="tile__img"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4ziXbr3hhZ702AIFgLSP_mwDM7XySbkgJBO9opmJEBcJy523puQs9gQrXO-8lmhX0ny02jJb8H40dQ_y1t3y0zqCu1xpPmy0U0MI8BTNRw79SgU-z8r2Ria9RChScZMz76Fx23BDP-rwLgaOMJFRPTKIJo8cHDNFin3ONUJO3yLN2Xx5C4UvBKS1ZcUd0Pa5KlGUcnVN5MPfED0lBv5IFowriMeOUAhJiGTsUXUH4pe1u01GvvM-R62lq_D9eY8QQhd7VYhjkIdMe"
+            alt="Palanca denuncia bares — imagen ilustrativa" loading="lazy">
+          <div class="tile__sub" style="margin-top:var(--space-md)">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;color:var(--color-accent)">gavel</span>
+            Riesgo: ninguno
+          </div>
+        </article>
+
+        <!-- Palanca semana label: pop 2x1 -->
+        <article class="tile tile--pop tile--2x1" style="display:flex;align-items:center;gap:var(--space-lg)">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:3rem;opacity:0.5;flex-shrink:0">star</span>
+          <div>
+            <p class="tile__label" style="margin-bottom:var(--space-xs)">Selección oficial LALIGA</p>
+            <div class="tile__title">Palanca de la Semana</div>
+          </div>
+        </article>
+
+        <!-- VAR Randomizer: dark 2x2 -->
+        <article class="tile tile--dark tile--2x2">
+          <span class="tile__tag">Herramienta burocrática</span>
+          <div class="tile__title" style="margin-top:var(--space-md)">
+            <span class="material-symbols-outlined" aria-hidden="true" style="vertical-align:middle;font-size:1.4em">casino</span>
+            VAR&nbsp;Randomizer&#8482;
+          </div>
+          <p id="circular-context" class="var-circular">
+            De acuerdo con la Circular 42-B: Para la siguiente jornada el árbitro VAR declarará penalti a favor del Madrid, incluso si el Madrid no se encuentra jugando el partido.
+          </p>
+          <div class="var-result" id="result-text" aria-live="polite">
+            &#8220;Penalti a favor del Madrid.&#8221;
+          </div>
+          <button id="randomizer-btn" onclick="tirarParaOtroEscandalo()" class="btn-var">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">autorenew</span>
+            Tirar para otro escándalo
+          </button>
+          <span class="material-symbols-outlined tile__icon-bg" aria-hidden="true">visibility</span>
+        </article>
+
+      </section>
+    </div><!-- /.page-wrap -->
+
+    <!-- Footer Ft8 -->
+    <footer class="site-footer">
+      <div class="footer-links">
+        <div class="footer-col">
+          <p class="footer-col-title">Departamentos</p>
+          <ul>
+            <li><a href="#">Oficina de Palancas</a></li>
+            <li><a href="#">Comité de Fair Play</a></li>
+            <li><a href="#">Gestión de NFTs</a></li>
+            <li><a href="#">Relaciones con CVC</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col-title">Legal (o algo así)</p>
+          <ul>
+            <li><a href="#">Términos y Condiciones*</a></li>
+            <li><a href="#">Política de Privacidad**</a></li>
+            <li><a href="#">Circular 42-B</a></li>
+            <li><a href="#">Denuncias Anónimas</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col-title">Recursos</p>
+          <ul>
+            <li><a href="#">Centro de Quejas VAR</a></li>
+            <li><a href="#">Calculadora de Deudas</a></li>
+            <li><a href="#">Guía Supervivencia FFP</a></li>
+            <li><a href="#">API de Escándalos</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col-title">Contacto Oficial</p>
+          <ul>
+            <li><a href="#">info@tebasaenterar.sindominio</a></li>
+            <li><a href="#">900-PALANCA</a></li>
+            <li><a href="#">Barcelona (Oficina Opaca)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item"><strong>[NOTICE]</strong> VAR confirma que el sol estaba demasiado amarillo para juego limpio</span>
+          <span class="marquee-item"><strong>[NOTICE]</strong> Tebas programa reunión de emergencia consigo mismo a medianoche</span>
+          <span class="marquee-item"><strong>[DEBT WATCH]</strong> &#8364;5.00 añadidos por cada silbato del árbitro</span>
+          <span class="marquee-item"><strong>[INTERNAL]</strong> Real Madrid jugará en isla flotante para evitar impuestos</span>
+          <span class="marquee-item"><strong>[MEMO]</strong> El tope salarial ahora se mide en vibras y promesas</span>
+          <span class="marquee-item"><strong>[ASSET]</strong> Registro exitoso con 4 sillas de oficina y una impresora</span>
+          <span class="marquee-item"><strong>[NOTICE]</strong> VAR confirma que el sol estaba demasiado amarillo para juego limpio</span>
+          <span class="marquee-item"><strong>[NOTICE]</strong> Tebas programa reunión de emergencia consigo mismo a medianoche</span>
+          <span class="marquee-item"><strong>[DEBT WATCH]</strong> &#8364;5.00 añadidos por cada silbato del árbitro</span>
+          <span class="marquee-item"><strong>[INTERNAL]</strong> Real Madrid jugará en isla flotante para evitar impuestos</span>
+          <span class="marquee-item"><strong>[MEMO]</strong> El tope salarial ahora se mide en vibras y promesas</span>
+          <span class="marquee-item"><strong>[ASSET]</strong> Registro exitoso con 4 sillas de oficina y una impresora</span>
+        </div>
+      </div>
+      <div class="footer-meta">
+        <p>&#169; 2026 TEBASAENTERAR · Todos los derechos reservados (y vendidos)</p>
+        <p>*Sujeto a cambios sin previo aviso · **No leemos los emails</p>
+      </div>
+    </footer>
+  </main>
+
+</body>
 </html>

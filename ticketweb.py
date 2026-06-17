@@ -174,6 +174,7 @@ def dashboard():
     if not user_data:
         return redirect(url_for('login'))
     avatar_url = user_data['avatar']
+    data_url = None
     try:
         response = requests.get(avatar_url, timeout=2, verify=False)
         encoded = base64.b64encode(response.content).decode()
@@ -199,12 +200,18 @@ def marketplace():
 def upload_image():
     user = request.cookies.get('user')
     userid = request.cookies.get('userid')
+    if not user or not userid:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         url = request.form.get('image_url', '').strip()
         if not url:
             return redirect(url_for('upload_image'))
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        if parsed.scheme not in ('http', 'https') or not parsed.netloc:
+            return redirect(url_for('upload_image'))
         db = get_db()
-        query = f"UPDATE users SET avatar = '{url}' WHERE id = {userid}"
+        query = f"UPDATE users SET avatar = '{url}' WHERE id = {int(userid)}"
         try:
             db.execute(query)
             db.commit()

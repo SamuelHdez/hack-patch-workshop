@@ -1,0 +1,29 @@
+[
+  {
+    "date": "2026-06-04",
+    "macrostructure": "Long Document (upload_image) · Ecosystem Index (palancas) · Feature Stack (admin)",
+    "theme": "adapted-Hum (brand-anchored)",
+    "enrichment": "none",
+    "brief": "Tebasaenterar CTF · upload_image + palancas + admin redesign",
+    "nav": "N1b (upload, palancas) · N7 Brutal slab (admin)",
+    "footer": "Ft2 inline (upload_image) · Ft8 marquee (palancas) · Ft4 colophon (admin)"
+  },
+  {
+    "date": "2026-06-04",
+    "macrostructure": "Letter (login) · Catalogue (marketplace) · Split Studio (checkout)",
+    "theme": "adapted-Hum (brand-anchored)",
+    "enrichment": "none",
+    "brief": "Tebasaenterar CTF · login + marketplace + checkout + cart redesign",
+    "nav": "N9 (login) · N1b (marketplace, checkout, cart)",
+    "footer": "Ft6 (login) · Ft8 (marketplace, checkout) · Ft2 (cart)"
+  },
+  {
+    "date": "2026-06-04",
+    "macrostructure": "Bento Grid + Split Dossier",
+    "theme": "adapted-Hum (brand-anchored)",
+    "enrichment": "none",
+    "brief": "Tebasaenterar CTF workshop · home + dashboard · satírico-burocrático + playful",
+    "nav": "N12 (home) · N1b (dashboard)",
+    "footer": "Ft8 Marquee scroll"
+  }
+]

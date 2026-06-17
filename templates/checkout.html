@@ -1,333 +1,705 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Tebasaenterar - Detalle de Activo Financiero</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&amp;display=swap"
-    rel="stylesheet" />
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "dark-gray": "#515455",
-            "deep-blue": "#033778",
-            "light-gray": "#b1b0b1",
-            "bright-blue": "#00aadb",
-            "pure-white": "#ffffff",
-          },
-          fontFamily: {
-            "display": ["Lexend"]
-          },
-          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
-        },
-      },
-    }
-  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — {{ item.title }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <style>
+    /* Hallmark · genre: playful · macrostructure: Split Studio
+     * theme: adapted-Hum (brand-anchored) · nav: N1b · footer: Ft8
+     * tone: satírico-burocrático + playful · anchor hue: oklch(62% 0.15 215)
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     * pre-emit critique: P4 H5 E4 S5 R4 V5
+     */
 
-  <style type="text/tailwindcss">
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
     body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #ffffff;
-            color: #033778;
-        }
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #033778;
-            color: #ffffff;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            z-index: 50;
-            border-top: 4px solid #00aadb;
-        }
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker 45s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        .bureaucratic-border {
-            border: 4px solid #033778;
-        }
-        .watermark {
-            transform: rotate(-30deg);
-            pointer-events: none;
-        }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-    </style>
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      line-height: 1.5;
+    }
+
+    /* nav: ver /static/css/nav.css */
+
+    /* ─── Page ─── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-lg) 0 var(--space-xl);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a {
+      text-decoration: none;
+      color: var(--color-ink-2);
+      transition: color var(--dur-micro) var(--ease-out);
+      white-space: nowrap;
+    }
+    .breadcrumb a:hover { color: var(--color-accent); }
+    .breadcrumb a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .breadcrumb__sep { color: var(--color-ink-3); }
+    .breadcrumb__current { color: var(--color-accent); white-space: nowrap; }
+
+    /* ─── Split Studio layout ─── */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 3fr 5fr 3fr;
+      gap: var(--space-xl);
+      align-items: start;
+      padding-bottom: var(--space-2xl);
+      border-bottom: 3px solid var(--color-ink);
+    }
+
+    /* Left: product image */
+    .product-image-col {}
+    .product-image-wrap {
+      border: 3px solid var(--color-ink);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 3 / 4;
+    }
+    .product-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+    .product-image-badge {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .product-image-badge p {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    /* Middle: details */
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+    .detail-header { border-bottom: 3px solid var(--color-ink); padding-bottom: var(--space-lg); }
+    .detail-header__category {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-accent);
+      margin-bottom: var(--space-sm);
+    }
+    .detail-header__title {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      line-height: 1.0;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+
+    .detail-block {}
+    .detail-block__label {
+      display: inline-block;
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 3px 10px;
+      margin-bottom: var(--space-md);
+    }
+    .detail-block__content {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-lg);
+    }
+    .detail-block__content p {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      line-height: 1.7;
+      color: var(--color-ink);
+    }
+    .detail-price {
+      border-left: 4px solid var(--color-accent);
+      padding: var(--space-md) var(--space-lg);
+      background-color: var(--color-paper-2);
+    }
+    .detail-price__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--color-accent);
+      line-height: 1.0;
+      font-variant-numeric: tabular-nums;
+    }
+    .detail-price__unit {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-ink-2);
+      margin-top: var(--space-sm);
+    }
+
+    /* Right: buy panel */
+    .buy-panel-col {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-lg));
+    }
+    .buy-panel {
+      background-color: var(--color-paper);
+      border: 3px solid var(--color-ink);
+    }
+    .buy-panel__header {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .buy-panel__header-title {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .buy-panel__body { padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-lg); }
+
+    /* Field */
+    .field { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .field__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-ink-2);
+    }
+    .field__input {
+      width: 100%;
+      height: 44px;
+      padding: 0 var(--space-md);
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-border);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 700;
+      outline: 2px solid transparent;
+      outline-offset: 1px;
+      transition: border-color var(--dur-micro) var(--ease-out),
+                  outline-color var(--dur-micro) var(--ease-out);
+      -moz-appearance: textfield;
+    }
+    .field__input::-webkit-outer-spin-button,
+    .field__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .field__input:hover { border-color: var(--color-ink-2); }
+    .field__input:focus {
+      border-color: var(--color-focus);
+      outline-color: var(--color-focus);
+    }
+
+    .balance-block {
+      background-color: var(--color-accent);
+      padding: var(--space-md) var(--space-lg);
+      border: 2px solid var(--color-ink);
+    }
+    .balance-block__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: oklch(90% 0.05 215);
+    }
+    .balance-block__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--color-accent-ink);
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .total-block {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .total-block__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-ink-2);
+    }
+    .total-block__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--color-accent);
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .balance-warning {
+      display: none;
+      background-color: oklch(95% 0.04 30);
+      border: 2px solid var(--color-alert);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .balance-warning.is-visible { display: block; }
+    .balance-warning p {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: oklch(35% 0.08 30);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .btn-apply {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      height: 56px;
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      border: 2px solid var(--color-ink);
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 1;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .btn-apply:hover:not(:disabled) { background-color: oklch(76% 0.20 95); }
+    .btn-apply:active:not(:disabled) { transform: translateY(1px); }
+    .btn-apply:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .btn-apply:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Not logged in panel */
+    .restricted-panel {
+      background-color: var(--color-paper);
+      border: 3px solid var(--color-ink);
+    }
+    .restricted-panel__header {
+      background-color: var(--color-paper-3);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      border-bottom: 2px solid var(--color-ink);
+    }
+    .restricted-panel__title {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .restricted-panel__body { padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-lg); }
+    .restricted-panel__text {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-ink-2);
+      line-height: 1.65;
+    }
+    .btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: 14px var(--space-lg);
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border: 2px solid var(--color-ink);
+      white-space: nowrap;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-login:hover { background-color: var(--color-accent-2); }
+    .btn-login:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ─── Audit comments ─── */
+    .audit-section {
+      padding: var(--space-2xl) 0;
+      border-top: 3px solid var(--color-ink);
+      margin-top: var(--space-2xl);
+    }
+    .audit-section__title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-lg);
+    }
+    .audit-card {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-lg);
+    }
+    .audit-card__source {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-accent);
+      margin-bottom: var(--space-md);
+    }
+    .audit-card__quote {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-ink-2);
+      line-height: 1.7;
+    }
+    .audit-card__quote::before { content: '\201C'; }
+    .audit-card__quote::after  { content: '\201D'; }
+
+    /* ─── Footer ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .footer-marquee { padding: 10px 0; overflow: hidden; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 50s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: 0 var(--space-xl);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(60% 0.05 215);
+    }
+    .marquee-item strong { color: var(--color-pop); font-weight: 900; }
+    .marquee-item::after { content: '·'; margin-left: var(--space-lg); color: oklch(35% 0.06 252); }
+    .footer-meta {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-md) var(--space-xl);
+      border-top: 1px solid oklch(28% 0.07 252);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .footer-meta p {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: oklch(48% 0.05 252);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner    { padding: 0 var(--space-lg); }
+      .page-wrap    { padding: 0 var(--space-lg); }
+      .nav-links    { display: none; }
+      .split-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-lg);
+      }
+      .buy-panel-col { position: static; }
+      .product-image-wrap { aspect-ratio: 16 / 9; }
+      .audit-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 40rem) {
+      .nav-inner    { padding: 0 var(--space-md); }
+      .page-wrap    { padding: 0 var(--space-md); }
+      .detail-header__title { font-size: var(--text-3xl); }
+      .footer-meta  { padding: var(--space-md); flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 150ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+      .marquee-track { animation: none; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-pure-white text-deep-blue">
-  <header
-    class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-20 lg:px-40 py-4">
-    <div class="flex items-center justify-between whitespace-nowrap">
-      <div class="flex items-center gap-8">
-        <a href="/">
-          <div class="flex items-center gap-4 text-deep-blue">
-            <div class="size-8">
-              <span class="material-symbols-outlined text-4xl">sports_soccer</span>
+  {% include 'partials/nav.html' %}
+
+  <main>
+    <div class="page-wrap">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Migas de pan">
+        <a href="/marketplace">Mercado</a>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <a href="/marketplace">Activos Financieros</a>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current" id="item-id">ID-ACTIVO_{{ "%03d"|format(item.id) }}</span>
+      </nav>
+
+      <!-- Split Studio layout -->
+      <div class="split-layout">
+
+        <!-- Image col -->
+        <div class="product-image-col">
+          <div class="product-image-wrap">
+            <div id="item-image" style="width:100%;height:100%;background-size:cover;background-position:center;background-image:url('{{ item.image }}');" aria-label="{{ item.title }}"></div>
+            <div class="product-image-badge">
+              <p id="item-badge">{{ item.badge }}</p>
             </div>
-            <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
-              Tebasaenterar
-            </h2>
-          </div>
-        </a>
-        <nav class="hidden lg:flex items-center gap-9">
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/">Boletín Oficial</a>
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/marketplace">Mercado de Palancas</a>
-          {% if user %}
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/palancas">Mis palancas</a>
-          {% endif %}
-        </nav>
-      </div>
-      <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
-        {% if user %}
-        <a href="/dashboard"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Expediente: #{{user}}</span>
-        </a>
-        {% else %}
-        <a href="/login"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Iniciar Sesión</span>
-        </a>
-        {% endif %}
-
-      </div>
-    </div>
-  </header>
-  <main class="max-w-[1400px] mx-auto pb-32 pt-10 px-4">
-    <div class="mb-6 flex gap-2 text-[10px] font-black uppercase">
-      <a class="opacity-50 hover:opacity-100" href="#">Mercado</a>
-      <span>/</span>
-      <a class="opacity-50 hover:opacity-100" href="#">Activos Financieros</a>
-      <span>/</span>
-      <span class="text-bright-blue" id="item-id">ID-ACTIVO_{{ "%03d" | format(item.id) }}</span>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <div class="lg:col-span-4">
-        <div class="relative bureaucratic-border bg-light-gray aspect-[3/4] overflow-hidden grayscale group">
-          <div id="item-image" class="w-full h-full bg-cover bg-center"
-            style="background-image: url('{{ item.image }}');">
-          </div>
-          <div class="absolute bottom-0 left-0 right-0 bg-deep-blue p-4 text-pure-white">
-            <p class="text-xl font-black" id="item-badge">{{ item.badge }}</p>
           </div>
         </div>
 
-      </div>
-      <div class="lg:col-span-5 flex flex-col gap-8">
-        <div class="border-b-8 border-deep-blue pb-4">
-          <h1 class="text-5xl font-black uppercase tracking-tighter">{{ item.title }}</h1>
-          <p class="text-lg font-bold text-bright-blue uppercase">Categoría: {{ item.category }}</p>
-        </div>
-        <div class="grid grid-cols-1 gap-4">
-          <h3 class="text-xs font-black uppercase bg-deep-blue text-pure-white px-3 py-1 w-fit">Descripción</h3>
-          <div class="flex flex-col gap-6 bg-light-gray/20 p-6 bureaucratic-border">
-            <p class="text-sm font-bold leading-tight">{{ item.description }}</p>
+        <!-- Details col -->
+        <div class="product-details">
+          <div class="detail-header">
+            <p class="detail-header__category">{{ item.category }}</p>
+            <h1 class="detail-header__title">{{ item.title }}</h1>
+          </div>
+
+          <div class="detail-block">
+            <span class="detail-block__label">Descripción</span>
+            <div class="detail-block__content">
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+
+          <div class="detail-block">
+            <span class="detail-block__label">Precio</span>
+            <div class="detail-price">
+              <p class="detail-price__amount">{{ "{:,.0f}".format(item.price) }}&thinsp;M&nbsp;&#8364;</p>
+              <p class="detail-price__unit">Precio por unidad de palanca</p>
+            </div>
           </div>
         </div>
-        <div class="flex flex-col gap-4">
-          <h3 class="text-xs font-black uppercase bg-deep-blue text-pure-white px-3 py-1 w-fit">Precio</h3>
-          <div class="border-l-4 border-deep-blue ml-2 pl-6 py-2 flex flex-col gap-2">
-            <p class="text-4xl font-black text-bright-blue">
-             {{ "{:,.0f}".format(item.price) }} MILLONES €
-            </p>
-            <p class="text-xs font-bold uppercase text-dark-gray">Precio por unidad de palanca</p>
-          </div>
-        </div>
-      </div>
-      <div class="lg:col-span-3">
-        <aside class="sticky top-28 flex flex-col gap-6">
+
+        <!-- Buy panel col -->
+        <div class="buy-panel-col">
           {% if user %}
-          <form id="checkout-form" onsubmit="return false;">
-            <div class="bg-pure-white bureaucratic-border p-6 shadow-[8px_8px_0px_0px_#033778]">
-              <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-4">
-                <span class="material-symbols-outlined text-bright-blue text-2xl">calculate</span>
-                <h2 class="text-xl font-black uppercase tracking-tighter">Comprar</h2>
+          <form id="checkout-form" onsubmit="return false;" novalidate>
+            <div class="buy-panel">
+              <div class="buy-panel__header">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">calculate</span>
+                <span class="buy-panel__header-title">Comprar</span>
               </div>
-              <div class="flex flex-col gap-4">
-                <div class="flex flex-col gap-1">
-                  <label class="text-[10px] font-black uppercase">Cantidad (Máximo 8)</label>
-                  <input type="number" id="cantidad" name="cantidad" min="1" max="8" value="1" required>
+              <div class="buy-panel__body">
+
+                <div class="field">
+                  <label class="field__label" for="cantidad">Cantidad (Máximo 8)</label>
+                  <input class="field__input" type="number" id="cantidad" name="cantidad"
+                    min="1" max="8" value="1" required>
                 </div>
 
-                <div class="flex flex-col gap-1 bg-bright-blue/10 p-3 border-2 border-bright-blue rounded">
-                  <p class="text-[10px] font-black uppercase text-bright-blue">Balance Disponible</p>
-                  <p class="text-2xl font-black text-bright-blue">
-                    {{ "{:,.0f}".format(balance) }} MILLONES €
+                <div class="balance-block">
+                  <p class="balance-block__label">Balance Disponible</p>
+                  <p class="balance-block__amount">{{ "{:,.0f}".format(balance) }}&thinsp;M&nbsp;&#8364;</p>
+                </div>
+
+                <div class="total-block">
+                  <p class="total-block__label">Precio Total</p>
+                  <p class="total-block__amount" id="total-price">{{ "{:,.0f}".format(item.price) }}&nbsp;&#8364;</p>
+                </div>
+
+                <div class="balance-warning" id="balance-warning" role="alert" aria-live="polite">
+                  <p>
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">warning</span>
+                    Balance insuficiente. Necesitas <strong><span id="needed-amount">0</span> M&#8364;</strong> más.
                   </p>
                 </div>
 
-                <div class="flex flex-col gap-1">
-                  <label class="text-[10px] font-black uppercase">Precio Total (MILLONES €)</label>
-                  <div class="p-3 bg-light-gray/20 border-2 border-deep-blue">
-                    <p class="text-xl font-black text-bright-blue" id="total-price">
-                        {{ "{:,.0f}".format(item.price) }} €
-                    </p>
-                  </div>
-                </div>
-
-                <div id="balance-warning" class="hidden p-3 bg-red-100 border-2 border-red-500 rounded">
-                  <p class="text-sm font-bold text-red-700">
-                    <span class="material-symbols-outlined text-lg align-middle">warning</span>
-                    Balance insuficiente. Necesitas <span id="needed-amount" class="font-black">0</span> millones € más.
-                  </p>
-                </div>
-
-                <button type="submit"
-                  id="apply-button"
-                  class="w-full py-4 mt-2 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0"
-                  disabled>
+                <button type="submit" id="apply-button" class="btn-apply" disabled>
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">bolt</span>
                   Aplicar palanca
                 </button>
+
               </div>
             </div>
           </form>
           {% else %}
-          <div class="bg-pure-white bureaucratic-border p-6 shadow-[8px_8px_0px_0px_#033778]">
-            <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-4">
-              <span class="material-symbols-outlined text-bright-blue text-2xl">lock</span>
-              <h2 class="text-xl font-black uppercase tracking-tighter">Acceso Restringido</h2>
+          <div class="restricted-panel">
+            <div class="restricted-panel__header">
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">lock</span>
+              <span class="restricted-panel__title">Acceso Restringido</span>
             </div>
-            <div class="flex flex-col gap-4 text-center">
-              <p class="text-sm font-bold text-dark-gray">
+            <div class="restricted-panel__body">
+              <p class="restricted-panel__text">
                 Debes iniciar sesión como accionista hipotecado para aplicar esta palanca financiera.
               </p>
-              <a href="/login"
-                class="w-full py-4 mt-2 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778] flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined">login</span>
-                <span>Iniciar Sesión</span>
+              <a href="/login" class="btn-login">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">login</span>
+                Iniciar Sesión
               </a>
             </div>
           </div>
           {% endif %}
-        </aside>
+        </div>
+
+      </div><!-- /.split-layout -->
+
+      <!-- Audit comments -->
+      <section class="audit-section" aria-labelledby="audit-title">
+        <h2 class="audit-section__title" id="audit-title">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.2em;line-height:1">fact_check</span>
+          Auditoría de Viabilidad Financiera
+        </h2>
+        <div class="audit-grid">
+          <div class="audit-card">
+            <p class="audit-card__source">Auditor Senior #41</p>
+            <p class="audit-card__quote">Desde un punto de vista puramente imaginario, los números cuadran si omitimos la columna de gastos y multiplicamos los ingresos por el número de seguidores en redes sociales.</p>
+          </div>
+          <div class="audit-card">
+            <p class="audit-card__source">Departamento de Fair Play</p>
+            <p class="audit-card__quote">Hemos revisado el contrato y creemos que el jugador puede cobrar en NFTs de edición limitada del césped del estadio para no computar como masa salarial.</p>
+          </div>
+          <div class="audit-card">
+            <p class="audit-card__source">Consultoría Externa Z</p>
+            <p class="audit-card__quote">Recomendamos la venta inmediata del activo a una liga del desierto antes de que la amortización consuma el oxígeno de las oficinas centrales.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.page-wrap -->
+
+    <!-- Footer Ft8 -->
+    <footer class="site-footer">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item"><strong>[ALERTA]</strong> Deuda total de la liga superando el PIB de varios países</span>
+          <span class="marquee-item"><strong>[NOTIF.]</strong> Reunión a medianoche para cambiar las reglas de inscripción</span>
+          <span class="marquee-item"><strong>[CVC]</strong> Dinero gratis* (*sujeto a 50 años de arrepentimiento)</span>
+          <span class="marquee-item"><strong>[VAR]</strong> El fuera de juego se mide por el tamaño de la nómina</span>
+          <span class="marquee-item"><strong>[CONTABLE]</strong> Las palancas ya son gimnasia olímpica financiera</span>
+          <span class="marquee-item"><strong>[ALERTA]</strong> Deuda total de la liga superando el PIB de varios países</span>
+          <span class="marquee-item"><strong>[NOTIF.]</strong> Reunión a medianoche para cambiar las reglas de inscripción</span>
+          <span class="marquee-item"><strong>[CVC]</strong> Dinero gratis* (*sujeto a 50 años de arrepentimiento)</span>
+          <span class="marquee-item"><strong>[VAR]</strong> El fuera de juego se mide por el tamaño de la nómina</span>
+          <span class="marquee-item"><strong>[CONTABLE]</strong> Las palancas ya son gimnasia olímpica financiera</span>
+        </div>
       </div>
-    </div>
-    <section class="mt-16 border-t-4 border-deep-blue pt-10">
-      <h2 class="text-2xl font-black uppercase mb-8 flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">fact_check</span>
-        Expert Audit Comments (Viabilidad Financiera)
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-light-gray/30 p-6 border-l-8 border-deep-blue">
-          <p class="text-xs font-black uppercase mb-4 text-bright-blue">Auditor Senior #41</p>
-          <p class="text-sm italic font-medium leading-relaxed">
-            "Desde un punto de vista puramente imaginario, los números cuadran si omitimos la columna de gastos y
-            multiplicamos los ingresos por el número de seguidores en redes sociales."
-          </p>
-        </div>
-        <div class="bg-light-gray/30 p-6 border-l-8 border-deep-blue">
-          <p class="text-xs font-black uppercase mb-4 text-bright-blue">Departamento de 'Fair Play'</p>
-          <p class="text-sm italic font-medium leading-relaxed">
-            "Hemos revisado el contrato y creemos que el jugador puede cobrar en NFTs de edición limitada del césped del
-            estadio para no computar como masa salarial."
-          </p>
-        </div>
-        <div class="bg-light-gray/30 p-6 border-l-8 border-deep-blue">
-          <p class="text-xs font-black uppercase mb-4 text-bright-blue">Consultoría Externa Z</p>
-          <p class="text-sm italic font-medium leading-relaxed">
-            "Recomendamos la venta inmediata del activo a una liga del desierto antes de que la amortización consuma el
-            oxígeno de las oficinas centrales."
-          </p>
-        </div>
+      <div class="footer-meta">
+        <p>&#169; 2026 TEBASAENTERAR · Detalle de Activo Financiero</p>
+        <p>Circular 44/2024 · Precios sujetos a palancas activas</p>
       </div>
-    </section>
+    </footer>
   </main>
-  <div class="ticker-wrap">
-    <div class="ticker">
-      <span class="mx-6 font-black uppercase text-bright-blue">[ALERTA]</span> DEUDA TOTAL DE LA LIGA SUPERANDO EL PIB
-      DE VARIOS PAÍSES...
-      <span class="mx-6 font-black uppercase text-bright-blue">[NOTIFICACIÓN]</span> REUNIÓN A MEDIANOCHE PARA CAMBIAR
-      LAS REGLAS DE INSCRIPCIÓN...
-      <span class="mx-6 font-black uppercase text-bright-blue">[CVC]</span> DINERO GRATIS* (*SUJETO A 50 AÑOS DE
-      ARREPENTIMIENTO)...
-      <span class="mx-6 font-black uppercase text-bright-blue">[VAR]</span> SE CONFIRMA QUE EL FUERA DE JUEGO SE MIDE
-      POR EL TAMAÑO DE LA NÓMINA...
-      <span class="mx-6 font-black uppercase text-bright-blue">[CONTABLE]</span> LAS PALANCAS AHORA SE CONSIDERAN
-      GIMNASIA OLÍMPICA FINANCIERA...
-    </div>
-  </div>
 
   <script>
-    // Obtener el parámetro id de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const itemId = parseInt(urlParams.get('id'));
-
     let currentItem = null;
 
     function updatePrice() {
       if (!currentItem) return;
-
       const cantidadInput = document.getElementById('cantidad');
       if (!cantidadInput) return;
-
       let cantidad = parseInt(cantidadInput.value) || 1;
-
-      // Validar máximo
-      if (cantidad > 8) {
-        cantidad = 8;
-        cantidadInput.value = 8;
-      }
-
-      // Validar mínimo
-      if (cantidad < 1) {
-        cantidad = 1;
-        cantidadInput.value = 1;
-      }
-
+      if (cantidad > 8) { cantidad = 8; cantidadInput.value = 8; }
+      if (cantidad < 1) { cantidad = 1; cantidadInput.value = 1; }
       const totalPrice = currentItem.price * cantidad;
-      const totalPriceElement = document.getElementById('total-price');
-      if (totalPriceElement) {
-        totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+      const totalPriceEl = document.getElementById('total-price');
+      if (totalPriceEl) {
+        totalPriceEl.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
       }
-
-      // Verificar si hay suficiente balance
       const balance = parseFloat("{{ balance }}") || 0;
-      const applyButton = document.getElementById('apply-button');
-      const balanceWarning = document.getElementById('balance-warning');
-      const neededAmount = document.getElementById('needed-amount');
-
-      if (applyButton && balanceWarning) {
+      const applyBtn = document.getElementById('apply-button');
+      const warning  = document.getElementById('balance-warning');
+      const needed   = document.getElementById('needed-amount');
+      if (applyBtn && warning) {
         if (totalPrice > balance) {
-          applyButton.disabled = true;
-          balanceWarning.classList.remove('hidden');
-          const needed = totalPrice - balance;
-          neededAmount.textContent = needed.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+          applyBtn.disabled = true;
+          warning.classList.add('is-visible');
+          if (needed) needed.textContent = (totalPrice - balance).toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         } else {
-          applyButton.disabled = false;
-          balanceWarning.classList.add('hidden');
+          applyBtn.disabled = false;
+          warning.classList.remove('is-visible');
         }
       }
     }
 
-    // Establecer currentItem desde los datos de Jinja
     currentItem = {
-      id: parseInt("{{ item.id }}"),
-      title: "{{ item.title }}",
-      category: "{{ item.category }}",
+      id:          parseInt("{{ item.id }}"),
+      title:       "{{ item.title }}",
+      category:    "{{ item.category }}",
       description: "{{ item.description }}",
-      price: parseFloat("{{ item.price }}"),
-      badge: "{{ item.badge }}",
-      image: "{{ item.image }}"
+      price:       parseFloat("{{ item.price }}"),
+      badge:       "{{ item.badge }}",
+      image:       "{{ item.image }}"
     };
 
     console.log('Item actual:', currentItem);
@@ -336,64 +708,45 @@
     const cantidadInput = document.getElementById('cantidad');
     if (cantidadInput) {
       cantidadInput.addEventListener('input', updatePrice);
-
-      // Prevenir envío del formulario al presionar Enter
-      cantidadInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-        }
+      cantidadInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') e.preventDefault();
       });
     }
 
-    // Agregar listener al formulario (solo si existe)
     const checkoutForm = document.getElementById('checkout-form');
     if (checkoutForm) {
-      checkoutForm.addEventListener('submit', function (e) {
+      checkoutForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // Serializa los datos del formulario a un objeto JS
         const formData = new FormData(this);
         const cart = {};
         formData.forEach((value, key) => { cart[key] = value; });
-        cart['user'] = '{{ user }}';
-        cart['user_id'] = '{{ userid }}';
-        cart['item_price'] = currentItem ? currentItem.price : 0;
-        cart['total_price'] = (currentItem.price * parseInt(formData.get('cantidad') || 1));
-        cart['item_id'] = currentItem ? currentItem.id : null;
-        cart['item_title'] = currentItem ? currentItem.title : null;
-        cart['item_category'] = currentItem ? currentItem.category : null;
-        cart['item_badge'] = currentItem ? currentItem.badge : null;
-        cart['item_image'] = currentItem ? currentItem.image : null;
+        cart['user']             = '{{ user }}';
+        cart['user_id']          = '{{ userid }}';
+        cart['item_price']       = currentItem ? currentItem.price : 0;
+        cart['total_price']      = (currentItem.price * parseInt(formData.get('cantidad') || 1));
+        cart['item_id']          = currentItem ? currentItem.id : null;
+        cart['item_title']       = currentItem ? currentItem.title : null;
+        cart['item_category']    = currentItem ? currentItem.category : null;
+        cart['item_badge']       = currentItem ? currentItem.badge : null;
+        cart['item_image']       = currentItem ? currentItem.image : null;
         cart['item_description'] = currentItem ? currentItem.description : null;
-
-        console.log('Carrito a guardar:', cart);
-        // Opcional: añade info de eventoId si quieres
         cart['id'] = itemId;
-        
-        // Codificar correctamente para Unicode
+        console.log('Carrito a guardar:', cart);
         const cartJson = JSON.stringify(cart);
-        const cartB64 = btoa(unescape(encodeURIComponent(cartJson)));
-        
+        const cartB64  = btoa(unescape(encodeURIComponent(cartJson)));
         fetch('/save_cart', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded', // así lo espera Flask
-          },
-          body: `cart=${encodeURIComponent(cartB64)}`
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'cart=' + encodeURIComponent(cartB64)
         })
           .then(res => res.text())
           .then(msg => {
-            setTimeout(() => {
-              window.location.href = '/palancas'; // <--- Aquí va la redirección
-            }, 1000);
+            setTimeout(() => { window.location.href = '/palancas'; }, 1000);
           })
-          .catch((err) => {
-            console.error('Error al guardar el carrito:', err);
-          });
+          .catch(err => { console.error('Error al guardar el carrito:', err); });
       });
     }
-
   </script>
-</body>
 
+</body>
 </html>

@@ -1,0 +1,40 @@
+{#
+  Tebasaenterar — Nav N1b compartida
+  Variables opcionales:
+    nav_page : 'home' | 'marketplace' | 'palancas' | 'dashboard' — marca el enlace activo
+              'dashboard' cambia el botón de expediente a fondo oscuro
+#}
+<nav class="site-nav" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.5rem;line-height:1">sports_soccer</span>
+      Tebasaenterar
+    </a>
+    <div class="nav-links">
+      <a href="/"
+        {% if nav_page == 'home' %}aria-current="page"{% endif %}>
+        Boletín Oficial
+      </a>
+      <a href="/marketplace"
+        {% if nav_page == 'marketplace' %}aria-current="page"{% endif %}>
+        Mercado Palancas
+      </a>
+      {% if user %}
+      <a href="/palancas"
+        {% if nav_page == 'palancas' %}aria-current="page"{% endif %}>
+        Mis Palancas
+      </a>
+      {% endif %}
+    </div>
+    <div class="nav-cta">
+      {% if user %}
+      <a href="/dashboard" class="btn-nav{% if nav_page == 'dashboard' %} btn-nav--current{% endif %}" {% if nav_page == 'dashboard' %}aria-current="page"{% endif %}>
+        <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">person</span>
+        Expediente&nbsp;#{{user}}
+      </a>
+      {% else %}
+      <a href="/login" class="btn-nav">Iniciar Sesión</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

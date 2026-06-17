@@ -1,313 +1,900 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Tebasaenterar - Panel de Control de la Liga</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        "dark-gray": "#515455",
-                        "deep-blue": "#033778",
-                        "light-gray": "#b1b0b1",
-                        "bright-blue": "#00aadb",
-                        "pure-white": "#ffffff",
-                    },
-                    fontFamily: {
-                        "display": ["Lexend"]
-                    },
-                    borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
-                },
-            },
-        }
-    </script>
-    <style type="text/tailwindcss">
-        body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #ffffff;
-            color: #033778;
-        }
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #033778;
-            color: #ffffff;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            z-index: 50;
-            border-top: 2px solid #00aadb;
-        }
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker-move 45s linear infinite;
-        }
-        @keyframes ticker-move {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        .bureaucratic-border {
-            border: 4px solid #033778;
-        }
-        .sidebar-widget {
-            border: 2px solid #033778;
-            background-color: #b1b0b1;
-        }
-    </style>
-</head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — Panel de Gestión Centralizada</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens (inline) ── */
+    :root {
+      --color-paper:   oklch(97%  0.010 90);
+      --color-paper-2: oklch(92%  0.015 90);
+      --color-paper-3: oklch(86%  0.020 90);
+      --color-ink:   oklch(20%  0.090 252);
+      --color-ink-2: oklch(40%  0.070 252);
+      --color-ink-3: oklch(62%  0.050 252);
+      --color-accent:     oklch(62%  0.150 215);
+      --color-accent-2:   oklch(55%  0.160 215);
+      --color-accent-ink: oklch(97%  0.010  90);
+      --color-pop:     oklch(82%  0.180  95);
+      --color-pop-ink: oklch(20%  0.090 252);
+      --color-alert:     oklch(60%  0.170  30);
+      --color-alert-ink: oklch(97%  0.010  90);
+      --color-border: oklch(80%  0.040 252);
+      --color-focus:  oklch(62%  0.150 215);
+      --font-display: 'Lexend', sans-serif;
+      --font-body:    'Lexend', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+      --text-xs:        clamp(0.65rem,  0.60rem + 0.25vw, 0.75rem);
+      --text-sm:        clamp(0.75rem,  0.70rem + 0.25vw, 0.875rem);
+      --text-base:      clamp(0.875rem, 0.80rem + 0.375vw, 1rem);
+      --text-lg:        clamp(1.00rem,  0.90rem + 0.50vw, 1.125rem);
+      --text-xl:        clamp(1.10rem,  1.00rem + 0.50vw, 1.25rem);
+      --text-2xl:       clamp(1.25rem,  1.10rem + 0.75vw, 1.5rem);
+      --text-3xl:       clamp(1.50rem,  1.30rem + 1.00vw, 2rem);
+      --text-4xl:       clamp(2.00rem,  1.60rem + 2.00vw, 2.75rem);
+      --text-display-s: clamp(2.50rem,  2.00rem + 2.50vw, 3.5rem);
+      --text-display:   clamp(3.50rem,  2.50rem + 5.00vw, 6rem);
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  40px;
+      --space-2xl: 64px;
+      --space-3xl: 96px;
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in:     cubic-bezier(0.70, 0, 0.84, 0);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro:   120ms;
+      --dur-short:   220ms;
+      --dur-long:    420ms;
+      --nav-height:    64px;
+      --z-sticky-nav:  300;
+    }
 
-<body class="min-h-screen bg-pure-white">
-    <header
-        class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-10 lg:px-20 py-4">
-        <div class="flex items-center justify-between whitespace-nowrap">
-            <div class="flex items-center gap-8">
-                <a href="/">
-                    <div class="flex items-center gap-4 text-deep-blue">
-                        <div class="size-8">
-                            <span class="material-symbols-outlined text-4xl">sports_soccer</span>
-                        </div>
-                        <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
-                            Tebasaenterar
-                        </h2>
-                    </div>
-                </a>
-                <nav class="hidden lg:flex items-center gap-9">
-                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-                        href="/">Boletín Oficial</a>
-                    <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-                        href="/marketplace">Mercado de Palancas</a>
-                </nav>
-            </div>
-            <div class="flex flex-1 justify-end gap-4 md:gap-6 items-center">
-                <button
-                    class="bg-bright-blue text-pure-white px-6 py-2 border-2 border-deep-blue font-black uppercase text-xs tracking-widest hover:brightness-110 transition-all">
-                    Decreto de Urgencia
-                </button>
-                <div
-                    class="hidden md:flex items-center gap-2 text-deep-blue font-black uppercase text-xs tracking-widest bg-light-gray px-4 py-2 border-2 border-deep-blue">
-                    <span class="material-symbols-outlined text-sm">person</span>
-                    <span>Admin: J. Tebas Jr.</span>
-                </div>
-            </div>
-        </div>
-    </header>
-    <main class="max-w-[1400px] mx-auto pt-8 pb-32 px-4">
-        <div class="mb-8 border-b-4 border-deep-blue pb-4 flex justify-between items-end">
-            <div>
-                <h1 class="text-deep-blue text-4xl font-black uppercase tracking-tighter">Panel de Gestión Centralizada
-                </h1>
-                <p class="text-dark-gray font-bold uppercase text-sm tracking-widest mt-2">Bienvenido al centro de
-                    control de la justicia deportiva (según presupuesto)</p>
-            </div>
-            <div class="text-right">
-                <p class="text-deep-blue font-black text-xl uppercase italic">Límite Salarial: -€452M</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-8 space-y-8">
-                <section class="bureaucratic-border p-6 bg-pure-white">
-                    <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-2">
-                        <span class="material-symbols-outlined">event_busy</span>
-                        <h3 class="text-deep-blue font-black uppercase tracking-widest">Calendario de Incidentes
-                            (Próximas Jornadas)</h3>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="sidebar-widget p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-black bg-deep-blue text-pure-white px-2 py-0.5">LUNES
-                                    23:00</span>
-                                <span class="text-[10px] font-bold text-dark-gray italic">Casi en Martes</span>
-                            </div>
-                            <p class="font-black text-deep-blue text-sm uppercase">FC Arruinado vs Real Deuda</p>
-                            <p class="text-[11px] text-dark-gray mt-1">Motivo: Petición de la operadora de TV china</p>
-                        </div>
-                        <div class="sidebar-widget p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-black bg-bright-blue text-pure-white px-2 py-0.5">POR
-                                    DETERMINAR</span>
-                            </div>
-                            <p class="font-black text-deep-blue text-sm uppercase">Atlético Sufridores vs Betis Pobre
-                            </p>
-                            <p class="text-[11px] text-dark-gray mt-1">Estado: Pendiente de lanzamiento de moneda</p>
-                        </div>
-                        <div class="sidebar-widget p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-black bg-deep-blue text-pure-white px-2 py-0.5">DOMINGO
-                                    14:00</span>
-                            </div>
-                            <p class="font-black text-deep-blue text-sm uppercase">Getafe vs Mallorca</p>
-                            <p class="text-[11px] text-dark-gray mt-1">Nota: 45 grados a la sombra programados</p>
-                        </div>
-                        <div class="sidebar-widget p-4 opacity-50">
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-[10px] font-black bg-dark-gray text-pure-white px-2 py-0.5">SUSPENDIDO</span>
-                            </div>
-                            <p class="font-black text-deep-blue text-sm uppercase">Valencia CF vs Su Propios Fans</p>
-                            <p class="text-[11px] text-dark-gray mt-1">Motivo: Exceso de sentido común en la grada</p>
-                        </div>
-                    </div>
-                </section>
-                <section class="bureaucratic-border p-6 bg-light-gray">
-                    <div class="flex items-center justify-between mb-6 border-b-2 border-deep-blue pb-2">
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined">payments</span>
-                            <h3 class="text-deep-blue font-black uppercase tracking-widest">Bóveda de Palancas (Vault of
-                                Levers)</h3>
-                        </div>
-                        <button
-                            class="bg-bright-blue text-pure-white px-3 py-1 text-[10px] font-bold border-2 border-deep-blue">HIPOTECAR
-                            FUTURO</button>
-                    </div>
-                    <div class="flex flex-col md:flex-row gap-8 items-center">
-                        <div class="flex-1 text-center border-r-2 border-deep-blue pr-8">
-                            <p class="text-[10px] font-black text-dark-gray uppercase">Dinero Blanqueado... digo, Ganado
-                            </p>
-                            <div class="flex items-center justify-center gap-2 mt-2">
-                                <span class="text-5xl font-black text-deep-blue">$</span>
-                                <span class="text-6xl font-black text-deep-blue tracking-tighter">842.100.000</span>
-                            </div>
-                            <p class="text-[11px] italic text-deep-blue mt-2">Cifra sujeta a cambios tras auditoría de
-                                amigos</p>
-                        </div>
-                        <div class="w-full md:w-48 h-32 flex items-end gap-2 px-4">
-                            <div class="bg-deep-blue w-full h-[20%]"></div>
-                            <div class="bg-bright-blue w-full h-[45%]"></div>
-                            <div class="bg-deep-blue w-full h-[85%] relative">
-                                <span class="absolute -top-6 left-0 text-[8px] font-black text-bright-blue">PICOS DE
-                                    DEUDA</span>
-                            </div>
-                            <div class="bg-bright-blue w-full h-[60%]"></div>
-                        </div>
-                    </div>
-                    <div class="mt-6 grid grid-cols-3 gap-2">
-                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
-                            <p class="text-[9px] font-bold uppercase">Catering</p>
-                            <p class="text-xs font-black">€12M</p>
-                        </div>
-                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
-                            <p class="text-[9px] font-bold uppercase">Abogados</p>
-                            <p class="text-xs font-black">€145M</p>
-                        </div>
-                        <div class="bg-pure-white p-2 border border-deep-blue text-center">
-                            <p class="text-[9px] font-bold uppercase">CVC Gasoil</p>
-                            <p class="text-xs font-black">€500M</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="lg:col-span-4 space-y-6">
-                <section class="sidebar-widget p-6">
-                    <div class="flex items-center gap-2 mb-4 border-b border-deep-blue pb-2">
-                        <span class="material-symbols-outlined">sports</span>
-                        <h3 class="text-deep-blue font-black uppercase text-xs tracking-widest">Asignación de Colegiados
-                        </h3>
-                    </div>
-                    <p class="text-[10px] text-dark-gray mb-4 italic leading-tight">Seleccione el nivel de controversia
-                        deseado para el próximo encuentro.</p>
-                    <div class="space-y-3">
-                        <div
-                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
-                            <div>
-                                <p class="text-xs font-black uppercase">Mateu LaPausa</p>
-                                <div class="flex gap-1 mt-1">
-                                    <span class="size-2 bg-red-600"></span>
-                                    <span class="size-2 bg-red-600"></span>
-                                    <span class="size-2 bg-red-600"></span>
-                                </div>
-                            </div>
-                            <span
-                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
-                                99%</span>
-                        </div>
-                        <div
-                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
-                            <div>
-                                <p class="text-xs font-black uppercase">Gil Mañero</p>
-                                <div class="flex gap-1 mt-1">
-                                    <span class="size-2 bg-red-600"></span>
-                                    <span class="size-2 bg-red-600"></span>
-                                    <span class="size-2 bg-yellow-400"></span>
-                                </div>
-                            </div>
-                            <span
-                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
-                                85%</span>
-                        </div>
-                        <div
-                            class="bg-pure-white p-3 border-2 border-deep-blue flex justify-between items-center group cursor-pointer hover:bg-bright-blue transition-colors">
-                            <div>
-                                <p class="text-xs font-black uppercase">Sánchez Miércoles</p>
-                                <div class="flex gap-1 mt-1">
-                                    <span class="size-2 bg-red-600"></span>
-                                    <span class="size-2 bg-yellow-400"></span>
-                                    <span class="size-2 bg-yellow-400"></span>
-                                </div>
-                            </div>
-                            <span
-                                class="text-[9px] font-black text-dark-gray group-hover:text-pure-white uppercase">Controversia:
-                                72%</span>
-                        </div>
-                    </div>
-                    <button
-                        class="w-full mt-4 bg-bright-blue text-pure-white font-black py-2 border-2 border-deep-blue text-[10px] uppercase tracking-widest hover:brightness-110">Confirmar
-                        Designación Digital</button>
-                </section>
-                <section class="sidebar-widget p-6">
-                    <h3
-                        class="text-deep-blue font-black uppercase text-xs tracking-widest mb-4 border-b border-deep-blue pb-2">
-                        Acciones Rápidas</h3>
-                    <div class="flex flex-col gap-2">
-                        <button
-                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
-                            Sanción por "Hablar de más"
-                            <span class="material-symbols-outlined text-sm">gavel</span>
-                        </button>
-                        <button
-                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
-                            Inventar Nueva Norma FairPlay
-                            <span class="material-symbols-outlined text-sm">edit_note</span>
-                        </button>
-                        <button
-                            class="w-full bg-pure-white text-deep-blue border-2 border-deep-blue py-2 px-4 text-[10px] font-black uppercase hover:bg-light-gray transition-colors text-left flex items-center justify-between">
-                            Subir Precio de DAZN
-                            <span class="material-symbols-outlined text-sm">trending_up</span>
-                        </button>
-                    </div>
-                </section>
-                <div class="p-4 border-4 border-dotted border-deep-blue bg-pure-white">
-                    <p class="text-[10px] font-bold text-deep-blue uppercase leading-tight italic">"El fútbol es de los
-                        fans, pero los derechos son míos hasta 2075."</p>
-                    <p class="text-[8px] mt-1 text-dark-gray">- Cita anónima de la presidencia</p>
-                </div>
-            </div>
-        </div>
-    </main>
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <span class="mx-6 font-black uppercase text-bright-blue">[ALERTA]</span> Se prohíbe el uso de césped natural
-            por ser demasiado barato...
-            <span class="mx-6 font-black uppercase text-bright-blue">[NOTICE]</span> El nuevo balón oficial será
-            cuadrado para fomentar el espectáculo...
-            <span class="mx-6 font-black uppercase text-bright-blue">[REGISTRO]</span> Se venden los derechos del nombre
-            de los hijos de los jugadores por 10 palancas...
-            <span class="mx-6 font-black uppercase text-bright-blue">[INTERNO]</span> Se busca voluntario para limpiar
-            el VAR (lleva mucho polvo)...
-            <span class="mx-6 font-black uppercase text-bright-blue">[MEMO]</span> El lunes a las 23:00 es el prime time
-            de la audiencia de Mongolia...
-        </div>
+    /* Hallmark · genre: playful · macrostructure: Feature Stack
+     * theme: adapted-Hum (brand-anchored) · nav: N7 Brutal slab · footer: Ft4
+     * tone: satírico-burocrático autoritario · anchor hue: oklch(62% 0.15 215)
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     * pre-emit critique: P4 H5 E4 S5 R4 V5
+     */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      line-height: 1.5;
+    }
+
+    /* ─── Nav N7 Brutal slab ─── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-nav);
+      background-color: var(--color-ink);
+      border-bottom: 4px solid var(--color-accent);
+    }
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      text-decoration: none;
+      color: var(--color-paper);
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .nav-brand:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      margin-left: var(--space-xl);
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: oklch(70% 0.05 215);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+      transition: color var(--dur-micro) var(--ease-out);
+      line-height: 1;
+    }
+    .nav-links a:hover { color: var(--color-paper); }
+    .nav-links a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+    .nav-cta-group {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .btn-decree {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 10px var(--space-lg);
+      background-color: var(--color-pop);
+      color: var(--color-pop-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border: 2px solid var(--color-paper);
+      white-space: nowrap;
+      cursor: pointer;
+      line-height: 1;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-decree:hover { background-color: oklch(76% 0.20 95); }
+    .btn-decree:active { transform: translateY(1px); }
+    .btn-decree:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+    .nav-admin-badge {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(65% 0.06 215);
+      white-space: nowrap;
+    }
+
+    /* ─── Page wrap ─── */
+    .page-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+    }
+
+    /* ─── Admin header ─── */
+    .admin-header {
+      padding: var(--space-2xl) 0 var(--space-xl);
+      border-bottom: 3px solid var(--color-ink);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--space-xl);
+    }
+    .admin-header__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-sm);
+    }
+    .admin-header__title {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .admin-header__sub {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-ink-2);
+      margin-top: var(--space-md);
+    }
+    .admin-header__salary {
+      text-align: right;
+    }
+    .admin-header__salary-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-ink-2);
+    }
+    .admin-header__salary-value {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--color-alert);
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── Main grid: Feature Stack ─── */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-xl);
+      padding: var(--space-xl) 0 var(--space-2xl);
+      align-items: start;
+    }
+
+    /* Feature Stack: stacked sections */
+    .feature-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .feature-section {
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper);
+    }
+    .feature-section__header {
+      background-color: var(--color-paper-2);
+      border-bottom: 2px solid var(--color-ink);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+    .feature-section__header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .feature-section__title {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .feature-section__body { padding: var(--space-lg); }
+
+    /* Calendar section */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+    .match-card {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .match-card--suspended { opacity: 0.5; }
+    .match-card__time {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 2px 6px;
+      margin-bottom: var(--space-sm);
+    }
+    .match-card__time--primary {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .match-card__time--secondary {
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+    }
+    .match-card__time--muted {
+      background-color: var(--color-ink-3);
+      color: var(--color-paper);
+    }
+    .match-card__teams {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .match-card__note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-ink-2);
+      margin-top: var(--space-sm);
+    }
+
+    /* Vault section */
+    .vault-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+    .vault-total {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--space-xl);
+    }
+    .vault-total__main { flex: 1; }
+    .vault-total__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-sm);
+    }
+    .vault-total__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      font-variant-numeric: tabular-nums;
+    }
+    .vault-total__note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-ink-3);
+      margin-top: var(--space-sm);
+    }
+
+    /* Mini bar chart */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-sm);
+      height: 80px;
+      flex-shrink: 0;
+    }
+    .bar-chart__bar {
+      flex: 1;
+      min-width: 20px;
+      position: relative;
+    }
+    .bar-chart__bar-fill {
+      background-color: var(--color-ink);
+      width: 100%;
+    }
+    .bar-chart__bar-fill--accent { background-color: var(--color-accent); }
+    .bar-chart__bar-label {
+      position: absolute;
+      top: -20px;
+      left: 0;
+      right: 0;
+      font-family: var(--font-mono);
+      font-size: 7px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--color-alert);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .vault-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .breakdown-item {
+      background-color: var(--color-paper-2);
+      border: 1px solid var(--color-ink);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .breakdown-item__category {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-ink-2);
+    }
+    .breakdown-item__amount {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
+    }
+
+    /* ─── Admin sidebar ─── */
+    .admin-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-lg));
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    /* Referee widget */
+    .widget {
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper-2);
+    }
+    .widget__header {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .widget__header-title {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .widget__body { padding: var(--space-lg); }
+    .widget__note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-ink-3);
+      margin-bottom: var(--space-md);
+    }
+
+    .referee-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .referee-item {
+      background-color: var(--color-paper);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out);
+    }
+    .referee-item:hover { background-color: var(--color-accent); color: var(--color-accent-ink); }
+    .referee-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .referee-item__info {}
+    .referee-item__name {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .referee-item__dots {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .referee-item__dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--color-alert);
+    }
+    .referee-item__dot--yellow { background-color: var(--color-pop); }
+    .referee-item__pct {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-2);
+      flex-shrink: 0;
+    }
+    .referee-item:hover .referee-item__pct { color: var(--color-accent-ink); opacity: 0.8; }
+
+    .btn-confirm {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      height: 44px;
+      margin-top: var(--space-md);
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      border: 2px solid var(--color-ink);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-confirm:hover { background-color: var(--color-accent-2); }
+    .btn-confirm:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* Quick actions */
+    .action-list { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .action-btn {
+      width: 100%;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      border: 2px solid var(--color-border);
+      padding: 12px var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      text-align: left;
+      white-space: nowrap;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  border-color var(--dur-micro) var(--ease-out);
+    }
+    .action-btn:hover { background-color: var(--color-paper-3); border-color: var(--color-ink); }
+    .action-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .action-btn:active { transform: translateY(1px); }
+
+    /* Quote */
+    .admin-quote {
+      border: 3px dashed var(--color-ink);
+      background-color: var(--color-paper);
+      padding: var(--space-lg);
+    }
+    .admin-quote__text {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-ink);
+      line-height: 1.65;
+    }
+    .admin-quote__text::before { content: '\201C'; }
+    .admin-quote__text::after  { content: '\201D'; }
+    .admin-quote__attr {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: var(--space-sm);
+    }
+
+    /* ─── Footer Ft4 dense colophon ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .footer-marquee { padding: 10px 0; overflow: hidden; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 60s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: 0 var(--space-xl);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(60% 0.05 215);
+    }
+    .marquee-item strong { color: var(--color-pop); font-weight: 900; }
+    .marquee-item::after { content: '·'; margin-left: var(--space-lg); color: oklch(35% 0.06 252); }
+
+    .footer-colophon {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-xl);
+      border-top: 1px solid oklch(28% 0.07 252);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: oklch(50% 0.05 252);
+      letter-spacing: 0.08em;
+      line-height: 1.8;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner   { padding: 0 var(--space-lg); }
+      .page-wrap   { padding: 0 var(--space-lg); }
+      .nav-links   { display: none; }
+      .nav-admin-badge { display: none; }
+      .admin-header { grid-template-columns: minmax(0, 1fr); }
+      .admin-header__salary { display: none; }
+      .admin-grid  { grid-template-columns: minmax(0, 1fr); }
+      .admin-sidebar { position: static; }
+      .calendar-grid { grid-template-columns: minmax(0, 1fr); }
+      .vault-total { flex-direction: column; align-items: flex-start; gap: var(--space-lg); }
+    }
+    @media (max-width: 40rem) {
+      .nav-inner   { padding: 0 var(--space-md); }
+      .page-wrap   { padding: 0 var(--space-md); }
+      .admin-header { padding: var(--space-xl) 0 var(--space-lg); }
+      .admin-header__title { font-size: var(--text-4xl); }
+      .vault-total__amount { font-size: var(--text-3xl); }
+      .vault-breakdown { grid-template-columns: minmax(0, 1fr); }
+      .footer-colophon { padding: var(--space-md); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 150ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+      .marquee-track { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav N7 Brutal slab -->
+  <nav class="site-nav" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.5rem;line-height:1">sports_soccer</span>
+        Tebasaenterar
+      </a>
+      <div class="nav-links">
+        <a href="/">Boletín Oficial</a>
+        <a href="/marketplace">Mercado Palancas</a>
+      </div>
+      <div class="nav-cta-group">
+        <button class="btn-decree" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">bolt</span>
+          Decreto de Urgencia
+        </button>
+        <span class="nav-admin-badge" aria-label="Usuario: Admin J. Tebas Jr.">
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1;vertical-align:middle">person</span>
+          Admin: J. Tebas Jr.
+        </span>
+      </div>
     </div>
+  </nav>
+
+  <main>
+    <div class="page-wrap">
+
+      <!-- Admin header -->
+      <header class="admin-header" aria-labelledby="admin-title">
+        <div>
+          <p class="admin-header__eyebrow">Panel de Control · LALIGA Oficial · Acceso Restringido</p>
+          <h1 class="admin-header__title" id="admin-title">Gestión<br>Centralizada</h1>
+          <p class="admin-header__sub">Bienvenido al centro de control de la justicia deportiva (según presupuesto)</p>
+        </div>
+        <div class="admin-header__salary" aria-hidden="true">
+          <p class="admin-header__salary-label">Límite Salarial</p>
+          <p class="admin-header__salary-value">&#8722;&#8364;452M</p>
+        </div>
+      </header>
+
+      <!-- Admin grid: Feature Stack + Sidebar -->
+      <div class="admin-grid">
+
+        <!-- Feature Stack (main) -->
+        <div class="feature-stack">
+
+          <!-- Section 1: Calendar of incidents -->
+          <section class="feature-section" aria-labelledby="calendar-title">
+            <div class="feature-section__header">
+              <div class="feature-section__header-left">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">event_busy</span>
+                <h2 class="feature-section__title" id="calendar-title">Calendario de Incidentes</h2>
+              </div>
+            </div>
+            <div class="feature-section__body">
+              <div class="calendar-grid">
+                <div class="match-card">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-sm)">
+                    <span class="match-card__time match-card__time--primary">Lunes 23:00</span>
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--color-ink-3);text-transform:uppercase">Casi en Martes</span>
+                  </div>
+                  <p class="match-card__teams">FC Arruinado vs Real Deuda</p>
+                  <p class="match-card__note">Motivo: Petición de la operadora de TV china</p>
+                </div>
+                <div class="match-card">
+                  <span class="match-card__time match-card__time--secondary" style="margin-bottom:var(--space-sm);display:inline-block">Por Determinar</span>
+                  <p class="match-card__teams">Atlético Sufridores vs Betis Pobre</p>
+                  <p class="match-card__note">Estado: Pendiente de lanzamiento de moneda</p>
+                </div>
+                <div class="match-card">
+                  <span class="match-card__time match-card__time--primary" style="margin-bottom:var(--space-sm);display:inline-block">Domingo 14:00</span>
+                  <p class="match-card__teams">Getafe vs Mallorca</p>
+                  <p class="match-card__note">Nota: 45 grados a la sombra programados</p>
+                </div>
+                <div class="match-card match-card--suspended">
+                  <span class="match-card__time match-card__time--muted" style="margin-bottom:var(--space-sm);display:inline-block">Suspendido</span>
+                  <p class="match-card__teams">Valencia CF vs Sus Propios Fans</p>
+                  <p class="match-card__note">Motivo: Exceso de sentido común en la grada</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: Vault -->
+          <section class="feature-section" aria-labelledby="vault-title">
+            <div class="feature-section__header">
+              <div class="feature-section__header-left">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">payments</span>
+                <h2 class="feature-section__title" id="vault-title">Bóveda de Palancas</h2>
+              </div>
+              <button class="btn-confirm" type="button" style="width:auto;height:36px;margin-top:0;padding:0 var(--space-lg);font-size:9px">
+                Hipotecar Futuro
+              </button>
+            </div>
+            <div class="feature-section__body">
+              <div class="vault-body">
+                <div class="vault-total">
+                  <div class="vault-total__main">
+                    <p class="vault-total__label">Dinero Blanqueado&#8230; digo, Ganado</p>
+                    <p class="vault-total__amount">&#36;842,100,000</p>
+                    <p class="vault-total__note">Cifra sujeta a cambios tras auditoría de amigos</p>
+                  </div>
+                  <div class="bar-chart" aria-hidden="true">
+                    <div class="bar-chart__bar" style="height:100%">
+                      <div class="bar-chart__bar-fill" style="height:20%"></div>
+                    </div>
+                    <div class="bar-chart__bar" style="height:100%">
+                      <div class="bar-chart__bar-fill bar-chart__bar-fill--accent" style="height:45%"></div>
+                    </div>
+                    <div class="bar-chart__bar" style="height:100%;position:relative">
+                      <span class="bar-chart__bar-label">PICOS</span>
+                      <div class="bar-chart__bar-fill" style="height:85%"></div>
+                    </div>
+                    <div class="bar-chart__bar" style="height:100%">
+                      <div class="bar-chart__bar-fill bar-chart__bar-fill--accent" style="height:60%"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="vault-breakdown">
+                  <div class="breakdown-item">
+                    <p class="breakdown-item__category">Catering</p>
+                    <p class="breakdown-item__amount">&#8364;12M</p>
+                  </div>
+                  <div class="breakdown-item">
+                    <p class="breakdown-item__category">Abogados</p>
+                    <p class="breakdown-item__amount">&#8364;145M</p>
+                  </div>
+                  <div class="breakdown-item">
+                    <p class="breakdown-item__category">CVC Gasoil</p>
+                    <p class="breakdown-item__amount">&#8364;500M</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- /.feature-stack -->
+
+        <!-- Admin sidebar -->
+        <div class="admin-sidebar">
+
+          <!-- Referee widget -->
+          <div class="widget">
+            <div class="widget__header">
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">sports</span>
+              <span class="widget__header-title">Asignación de Colegiados</span>
+            </div>
+            <div class="widget__body">
+              <p class="widget__note">Nivel de controversia deseado para el próximo encuentro:</p>
+              <div class="referee-list">
+                <button class="referee-item" type="button">
+                  <div class="referee-item__info">
+                    <p class="referee-item__name">Mateu LaPausa</p>
+                    <div class="referee-item__dots" aria-label="Controversia: 99%">
+                      <span class="referee-item__dot"></span>
+                      <span class="referee-item__dot"></span>
+                      <span class="referee-item__dot"></span>
+                    </div>
+                  </div>
+                  <span class="referee-item__pct">Controversia: 99%</span>
+                </button>
+                <button class="referee-item" type="button">
+                  <div class="referee-item__info">
+                    <p class="referee-item__name">Gil Mañero</p>
+                    <div class="referee-item__dots" aria-label="Controversia: 85%">
+                      <span class="referee-item__dot"></span>
+                      <span class="referee-item__dot"></span>
+                      <span class="referee-item__dot referee-item__dot--yellow"></span>
+                    </div>
+                  </div>
+                  <span class="referee-item__pct">Controversia: 85%</span>
+                </button>
+                <button class="referee-item" type="button">
+                  <div class="referee-item__info">
+                    <p class="referee-item__name">Sánchez Miércoles</p>
+                    <div class="referee-item__dots" aria-label="Controversia: 72%">
+                      <span class="referee-item__dot"></span>
+                      <span class="referee-item__dot referee-item__dot--yellow"></span>
+                      <span class="referee-item__dot referee-item__dot--yellow"></span>
+                    </div>
+                  </div>
+                  <span class="referee-item__pct">Controversia: 72%</span>
+                </button>
+              </div>
+              <button class="btn-confirm" type="button">Confirmar Designación</button>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="widget">
+            <div class="widget__header">
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">bolt</span>
+              <span class="widget__header-title">Acciones Rápidas</span>
+            </div>
+            <div class="widget__body">
+              <div class="action-list">
+                <button class="action-btn" type="button">
+                  Sanción por "Hablar de más"
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1;flex-shrink:0">gavel</span>
+                </button>
+                <button class="action-btn" type="button">
+                  Inventar Nueva Norma FairPlay
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1;flex-shrink:0">edit_note</span>
+                </button>
+                <button class="action-btn" type="button">
+                  Subir Precio de DAZN
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1;flex-shrink:0">trending_up</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quote -->
+          <div class="admin-quote" role="blockquote">
+            <p class="admin-quote__text">El fútbol es de los fans, pero los derechos son míos hasta 2075.</p>
+            <p class="admin-quote__attr">&#8212; Cita anónima de la presidencia</p>
+          </div>
+
+        </div><!-- /.admin-sidebar -->
+
+      </div><!-- /.admin-grid -->
+    </div><!-- /.page-wrap -->
+
+    <!-- Footer Ft4 + marquee -->
+    <footer class="site-footer">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item"><strong>[ALERTA]</strong> Se prohíbe el uso de césped natural por ser demasiado barato</span>
+          <span class="marquee-item"><strong>[NOTICE]</strong> El nuevo balón oficial será cuadrado para fomentar el espectáculo</span>
+          <span class="marquee-item"><strong>[REGISTRO]</strong> Se venden los derechos del nombre de los hijos de los jugadores</span>
+          <span class="marquee-item"><strong>[INTERNO]</strong> Se busca voluntario para limpiar el VAR (lleva mucho polvo)</span>
+          <span class="marquee-item"><strong>[MEMO]</strong> El lunes a las 23:00 es el prime time de la audiencia de Mongolia</span>
+          <span class="marquee-item"><strong>[ALERTA]</strong> Se prohíbe el uso de césped natural por ser demasiado barato</span>
+          <span class="marquee-item"><strong>[NOTICE]</strong> El nuevo balón oficial será cuadrado para fomentar el espectáculo</span>
+          <span class="marquee-item"><strong>[REGISTRO]</strong> Se venden los derechos del nombre de los hijos de los jugadores</span>
+          <span class="marquee-item"><strong>[INTERNO]</strong> Se busca voluntario para limpiar el VAR (lleva mucho polvo)</span>
+          <span class="marquee-item"><strong>[MEMO]</strong> El lunes a las 23:00 es el prime time de la audiencia de Mongolia</span>
+        </div>
+      </div>
+      <!-- Ft4 dense colophon -->
+      <div class="footer-colophon">
+        &#169; 2026 TEBASAENTERAR S.A. · Panel de Gestión Centralizada v4.2 · Acceso restringido por Circular 88-B ·
+        Límite Salarial: &#8722;&#8364;452M · Todos los derechos vendidos al mejor postor ·
+        Sistema auditado por el VAR contable · No apto para menores de 18 palancas ·
+        Build: 2026.06.04 · Revisión: nunca
+      </div>
+    </footer>
+  </main>
 
 </body>
-
 </html>

@@ -1,217 +1,597 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Tebasaenterar - Mis Activos Hipotecados</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "dark-gray": "#515455",
-            "deep-blue": "#033778",
-            "light-gray": "#b1b0b1",
-            "bright-blue": "#00aadb",
-            "pure-white": "#ffffff",
-          },
-          fontFamily: {
-            "display": ["Lexend"]
-          },
-          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
-        },
-      },
-    }
-  </script>
-  <style type="text/tailwindcss">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — Mis Activos Hipotecados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <style>
+    /* Hallmark · genre: playful · macrostructure: Ecosystem Index
+     * theme: adapted-Hum (brand-anchored) · nav: N1b · footer: Ft8
+     * tone: satírico-burocrático + playful · anchor hue: oklch(62% 0.15 215)
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     * pre-emit critique: P4 H5 E4 S5 R4 V5
+     */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
     body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #ffffff;
-            color: #033778;
-        }
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #033778;
-            color: #ffffff;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            z-index: 50;
-            border-top: 4px solid #00aadb;
-        }
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker 45s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        .bureaucratic-border {
-            border: 4px solid #033778;
-        }
-        .risk-meter-bg {
-            background: linear-gradient(90deg, #10b981 0%, #facc15 50%, #ef4444 100%);
-        }
-    </style>
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      line-height: 1.5;
+    }
+
+    /* nav: ver /static/css/nav.css */
+
+    /* ─── Page wrap ─── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+    }
+
+    /* ─── Page header ─── */
+    .page-header {
+      padding: var(--space-2xl) 0 var(--space-xl);
+      border-bottom: 3px solid var(--color-ink);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--space-xl);
+    }
+    .page-header__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-md);
+    }
+    .page-header__title {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .page-header__meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-ink-2);
+      margin-top: var(--space-md);
+    }
+    .page-header__balance {
+      text-align: right;
+    }
+    .page-header__balance-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-ink-2);
+    }
+    .page-header__balance-amount {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--color-accent);
+      line-height: 1.0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── Main layout ─── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--space-2xl);
+      padding: var(--space-xl) 0 var(--space-2xl);
+      align-items: start;
+    }
+
+    /* ─── Items grid ─── */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .palanca-card {
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper-2);
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--dur-short) var(--ease-out);
+    }
+    .palanca-card:hover { transform: translateY(-3px); }
+
+    .palanca-card__image {
+      width: 100%;
+      height: 140px;
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(100%);
+      border-bottom: 2px solid var(--color-ink);
+      flex-shrink: 0;
+    }
+    .palanca-card__body {
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: var(--space-sm);
+    }
+    .palanca-card__id {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-3);
+    }
+    .palanca-card__title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .palanca-card__desc {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-ink-2);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .palanca-card__footer {
+      padding: var(--space-md) var(--space-lg);
+      border-top: 2px solid var(--color-ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      background-color: var(--color-paper-3);
+    }
+    .palanca-card__price {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .palanca-card__badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      padding: 3px 6px;
+      border: 1px solid var(--color-ink);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper-2);
+      padding: var(--space-3xl) var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-lg);
+    }
+    .empty-state__icon {
+      font-size: 3rem;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+    .empty-state__title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+    .empty-state__body {
+      font-size: var(--text-sm);
+      color: var(--color-ink-2);
+      max-width: 40ch;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 14px var(--space-xl);
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border: 2px solid var(--color-ink);
+      white-space: nowrap;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .btn-cta:hover { background-color: var(--color-accent-2); }
+    .btn-cta:active { transform: translateY(1px); }
+    .btn-cta:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ─── Sidebar: account state ─── */
+    .account-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-lg));
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .account-card {
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper);
+    }
+    .account-card__header {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .account-card__header-title {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .account-card__body {
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    /* Balance stat */
+    .balance-stat__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-sm);
+    }
+    .balance-stat__value {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      font-variant-numeric: tabular-nums;
+    }
+    .balance-bar {
+      width: 100%;
+      height: 6px;
+      background-color: var(--color-paper-3);
+      border: 1px solid var(--color-border);
+      margin-top: var(--space-sm);
+      overflow: hidden;
+    }
+    .balance-bar__fill {
+      height: 100%;
+      background-color: var(--color-alert);
+      width: 85%;
+    }
+
+    /* Risk meter */
+    .risk-meter { }
+    .risk-meter__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-sm);
+    }
+    .risk-meter__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-ink-2);
+    }
+    .risk-meter__level {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-alert);
+    }
+    .risk-meter__bar {
+      width: 100%;
+      height: 24px;
+      border: 2px solid var(--color-ink);
+      position: relative;
+      overflow: hidden;
+      /* No gradient — use accent zones */
+      background: linear-gradient(90deg,
+        oklch(65% 0.15 145) 0%,
+        var(--color-pop) 45%,
+        var(--color-alert) 85%,
+        oklch(45% 0.18 25) 100%
+      );
+    }
+    .risk-meter__bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 85%;
+      width: 2px;
+      height: 100%;
+      background-color: var(--color-ink);
+    }
+    .risk-meter__note {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: var(--space-sm);
+    }
+
+    /* Recommendation */
+    .recommendation {
+      background-color: var(--color-paper-2);
+      border: 2px solid var(--color-ink);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .recommendation__label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-ink-2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: var(--space-sm);
+    }
+    .recommendation__text {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-ink);
+      line-height: 1.6;
+    }
+
+    /* ─── Footer Ft8 ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .footer-marquee { padding: 10px 0; overflow: hidden; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 50s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: 0 var(--space-xl);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: oklch(60% 0.05 215);
+    }
+    .marquee-item strong { color: var(--color-pop); font-weight: 900; }
+    .marquee-item::after { content: '·'; margin-left: var(--space-lg); color: oklch(35% 0.06 252); }
+    .footer-meta {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-md) var(--space-xl);
+      border-top: 1px solid oklch(28% 0.07 252);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .footer-meta p {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: oklch(48% 0.05 252);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner   { padding: 0 var(--space-lg); }
+      .page-wrap   { padding: 0 var(--space-lg); }
+      .nav-links   { display: none; }
+      .page-header { grid-template-columns: minmax(0, 1fr); }
+      .page-header__balance { display: none; }
+      .main-layout { grid-template-columns: minmax(0, 1fr); }
+      .account-sidebar { position: static; }
+    }
+    @media (max-width: 40rem) {
+      .nav-inner   { padding: 0 var(--space-md); }
+      .page-wrap   { padding: 0 var(--space-md); }
+      .page-header { padding: var(--space-xl) 0 var(--space-lg); }
+      .page-header__title { font-size: var(--text-4xl); }
+      .items-grid  { grid-template-columns: minmax(0, 1fr); }
+      .footer-meta { padding: var(--space-md); flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 150ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+      .marquee-track { animation: none; }
+      .palanca-card:hover { transform: none; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-pure-white text-deep-blue">
-  <header
-    class="sticky top-0 z-40 w-full border-b-4 border-solid border-deep-blue bg-pure-white px-4 md:px-20 lg:px-40 py-4">
-    <div class="flex items-center justify-between whitespace-nowrap">
-      <div class="flex items-center gap-8">
-        <a href="/">
-          <div class="flex items-center gap-4 text-deep-blue">
-            <div class="size-8">
-              <span class="material-symbols-outlined text-4xl">sports_soccer</span>
-            </div>
-            <h2 class="text-deep-blue text-2xl font-black leading-tight tracking-tight uppercase">
-              Tebasaenterar
-            </h2>
-          </div>
-        </a>
-        <nav class="hidden lg:flex items-center gap-9">
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/">Boletín Oficial</a>
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/marketplace">Mercado de Palancas</a>
-          {% if user %}
-          <a class="text-deep-blue hover:text-bright-blue transition-colors text-sm font-bold uppercase tracking-wider"
-            href="/palancas">Mis palancas</a>
-          {% endif %}
-        </nav>
-      </div>
-      <div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
-        {% if user %}
-        <a href="/dashboard"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Expediente: #{{user}}</span>
-        </a>
-        {% else %}
-        <a href="/login"
-          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-bright-blue text-pure-white text-sm font-black uppercase leading-normal tracking-widest hover:brightness-110 border-2 border-deep-blue">
-          <span class="truncate">Iniciar Sesión</span>
-        </a>
-        {% endif %}
+  {% set nav_page = 'palancas' %}
+  {% include 'partials/nav.html' %}
 
-      </div>
-    </div>
-  </header>
-  <main class="max-w-[1400px] mx-auto pb-32 pt-10 px-4">
-    <div class="flex flex-col lg:flex-row gap-8">
-      <div class="flex-grow">
-        <div class="mb-8 border-b-8 border-deep-blue pb-4">
-          <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter">REGISTRO PROVISIONAL DE ACTIVOS
-            ADQUIRIDOS</h1>
-          <p class="text-sm font-bold uppercase mt-2 opacity-80">SUBDIRECCIÓN GENERAL DE HIPOTECAS DEPORTIVAS -
-            EXPEDIENTE 2024/FFP</p>
+  <main>
+    <div class="page-wrap">
+
+      <!-- Header: Ecosystem Index -->
+      <header class="page-header" aria-labelledby="palancas-title">
+        <div>
+          <p class="page-header__eyebrow">Subdirección General de Hipotecas Deportivas · Expediente 2024/FFP</p>
+          <h1 class="page-header__title" id="palancas-title">Registro de<br>Activos</h1>
+          <p class="page-header__meta">Activos adquiridos · Temporada 2025/26 · Estado: hipotecado</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="palancas-container">
-          {% if palancas %}
-            {% for item in palancas %}
-            <div class="bg-light-gray bureaucratic-border p-6 flex flex-col gap-4 relative">
-              <div class="flex gap-4">
-                <div class="w-24 h-24 bg-pure-white border-2 border-deep-blue grayscale"
-                  style='background-image: url("{{item.item_image if item.item_image else 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr'}}"); background-size: cover;'>
+        <div class="page-header__balance" aria-hidden="true">
+          <p class="page-header__balance-label">Capital disponible</p>
+          <p class="page-header__balance-amount">{{balance}}&thinsp;M</p>
+        </div>
+      </header>
+
+      <!-- Two-column layout -->
+      <div class="main-layout">
+
+        <!-- Items grid -->
+        <section aria-labelledby="palancas-title">
+          <div class="items-grid" id="palancas-container">
+            {% if palancas %}
+              {% for item in palancas %}
+              <article class="palanca-card">
+                <div class="palanca-card__image"
+                  style="background-image: url('{{ item.item_image if item.item_image else "https://lh3.googleusercontent.com/aida-public/AB6AXuDYsyNe8hAt3XfthWHhlsf9FbEmLOYubyBNXgwrhWg5b3xnf8i50GxUJHtVirrg3W_4IAXOwvRQCKlk8idnrNGXyrIHmBWS3Hkz2QvpY10HCzGYx0spibnZY1az_0fHuraR2neGTrEAfL3EgyS3XEP0XYZXcg5jhocdfL-9r2ECJSpuMfBUjKuXOXEnHecb-wRZytHfS4gGmD2tFKOZVg8r7rpIEC4x-Wdt1Ga9sgmBA7gb19Boj1VPV3xNiRtb-hqNdx0Cqmr6Xycr" }}')"
+                  role="img"
+                  aria-label="{{ item.item_title if item.item_title else 'Activo sin título' }}">
                 </div>
-                <div class="flex flex-col justify-center">
-                  <h3 class="text-xl font-black uppercase leading-tight">{{item.item_title if item.item_title else 'Sin título'}}</h3>
-                  <p class="text-[10px] font-bold uppercase text-dark-gray">ID REGISTRO: #{{item.item_id if item.item_id else 'N/A'}}</p>
+                <div class="palanca-card__body">
+                  <p class="palanca-card__id">ID Registro: #{{ item.item_id if item.item_id else 'N/A' }}</p>
+                  <h2 class="palanca-card__title">{{ item.item_title if item.item_title else 'Sin título' }}</h2>
+                  <p class="palanca-card__desc">{{ item.item_description if item.item_description else 'Sin descripción' }}</p>
                 </div>
-              </div>
-              <p>{{item.item_description if item.item_description else 'Sin descripción'}}</p>
-              <div class="border-t-2 border-deep-blue pt-4 mt-2 grid grid-cols-2 gap-4">
-                <div>
-                  <p class="text-[10px] font-black uppercase opacity-60">Comprado por</p>
-                  <p class="text-xl font-black">{{item.total_price if item.total_price else '0'}} millones €</p>
+                <div class="palanca-card__footer">
+                  <p class="palanca-card__price">&#8364;{{ item.total_price if item.total_price else '0' }}M</p>
+                  <span class="palanca-card__badge">{{ item.item_badge if item.item_badge else 'N/A' }}</span>
                 </div>
-              </div>
-              <div class=" bg-bright-blue text-pure-white text-[10px] font-black px-2 py-1 border
-            border-deep-blue">
-                {{item.item_badge if item.item_badge else 'Sin categoría'}}
-              </div>
-            </div>
-            {% endfor %}
-          {% else %}
-          <div class="col-span-1 md:col-span-2 bg-light-gray bureaucratic-border p-12 flex flex-col gap-6 items-center justify-center text-center">
-            <span class="material-symbols-outlined text-6xl text-bright-blue">shopping_cart</span>
-            <div>
-              <h3 class="text-2xl font-black uppercase mb-2">No hay palancas adquiridas</h3>
-              <p class="text-sm font-bold text-dark-gray mb-6">Aún no has adquirido ninguna palanca financiera. ¡Dirígete al mercado y comienza a hipotecarte!</p>
-              <a href="/marketplace"
-                class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-bright-blue text-pure-white font-black uppercase tracking-widest border-2 border-deep-blue hover:translate-x-1 hover:translate-y-1 transition-all shadow-[4px_4px_0px_0px_#033778]">
-                <span class="material-symbols-outlined">shopping_bag</span>
-                <span>Ir al Mercado de Palancas</span>
+              </article>
+              {% endfor %}
+            {% else %}
+            <div class="empty-state">
+              <span class="material-symbols-outlined empty-state__icon" aria-hidden="true">shopping_cart</span>
+              <h2 class="empty-state__title">Sin palancas adquiridas</h2>
+              <p class="empty-state__body">
+                Aún no has adquirido ninguna palanca financiera. ¡Dirígete al mercado y comienza a hipotecarte!
+              </p>
+              <a href="/marketplace" class="btn-cta">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1rem;line-height:1">shopping_bag</span>
+                Ir al Mercado de Palancas
               </a>
             </div>
+            {% endif %}
           </div>
-          {% endif %}
+        </section>
+
+        <!-- Account sidebar -->
+        <aside class="account-sidebar" aria-label="Estado de cuentas">
+          <div class="account-card">
+            <div class="account-card__header">
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:1.1rem;line-height:1">summarize</span>
+              <span class="account-card__header-title">Estado de Cuentas</span>
+            </div>
+            <div class="account-card__body">
+
+              <div class="balance-stat">
+                <p class="balance-stat__label">Capital disponible</p>
+                <p class="balance-stat__value">{{balance}}&thinsp;M</p>
+                <div class="balance-bar" aria-hidden="true">
+                  <div class="balance-bar__fill"></div>
+                </div>
+              </div>
+
+              <div class="risk-meter">
+                <div class="risk-meter__header">
+                  <span class="risk-meter__label">Riesgo Descenso Admin.</span>
+                  <span class="risk-meter__level">CRÍTICO</span>
+                </div>
+                <div class="risk-meter__bar" role="meter" aria-label="Riesgo crítico al 85%"></div>
+                <p class="risk-meter__note">* Cálculo basado en la "Regla del 1:1" modificada a conveniencia.</p>
+              </div>
+
+              <div class="recommendation">
+                <p class="recommendation__label">
+                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:0.9rem;line-height:1">gavel</span>
+                  Recomendación Contable
+                </p>
+                <p class="recommendation__text">
+                  "Si vendemos los derechos de explotación de la cafetería de los juveniles a una empresa de las Islas Caimán, el balance cuadra hasta el martes."
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /.main-layout -->
+    </div><!-- /.page-wrap -->
+
+    <!-- Footer Ft8 -->
+    <footer class="site-footer">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item"><strong>[ACTUALIZACIÓN]</strong> Los intereses de demora suben un 2% mientras lees esto</span>
+          <span class="marquee-item"><strong>[AVISO]</strong> El presidente ha sido visto comprando un billete solo ida a Panamá</span>
+          <span class="marquee-item"><strong>[PALANCA]</strong> Se alquila el estadio para comuniones y bodas de destino</span>
+          <span class="marquee-item"><strong>[CVC]</strong> Firma aquí y recibe una foto firmada y 50 años de hipoteca</span>
+          <span class="marquee-item"><strong>[AUDITORÍA]</strong> El nivel de creatividad contable ha superado a Picasso</span>
+          <span class="marquee-item"><strong>[ACTUALIZACIÓN]</strong> Los intereses de demora suben un 2% mientras lees esto</span>
+          <span class="marquee-item"><strong>[AVISO]</strong> El presidente ha sido visto comprando un billete solo ida a Panamá</span>
+          <span class="marquee-item"><strong>[PALANCA]</strong> Se alquila el estadio para comuniones y bodas de destino</span>
+          <span class="marquee-item"><strong>[CVC]</strong> Firma aquí y recibe una foto firmada y 50 años de hipoteca</span>
+          <span class="marquee-item"><strong>[AUDITORÍA]</strong> El nivel de creatividad contable ha superado a Picasso</span>
         </div>
       </div>
-      <aside class="w-full lg:w-96 flex flex-col gap-6">
-        <div class="bg-pure-white bureaucratic-border p-8 sticky top-28">
-          <div class="flex items-center gap-2 mb-6 border-b-2 border-deep-blue pb-4">
-            <span class="material-symbols-outlined text-bright-blue text-3xl">summarize</span>
-            <h2 class="text-2xl font-black uppercase tracking-tighter">Estado de Cuentas</h2>
-          </div>
-          <div class="flex flex-col gap-6">
-            <div>
-              <span class="text-[10px] font-black uppercase block mb-1">Capital disponible</span>
-              <span class="text-4xl font-black text-deep-blue tracking-tighter">{{balance}} millones</span>
-              <div class="w-full h-2 bg-light-gray mt-2">
-                <div class="bg-red-600 h-full w-[85%]"></div>
-              </div>
-            </div>
-            <div class="mt-4">
-              <div class="flex justify-between items-end mb-1">
-                <span class="text-[10px] font-black uppercase leading-none">Riesgo Descenso Administrativo</span>
-                <span class="text-xs font-black text-red-600">CRÍTICO</span>
-              </div>
-              <div class="w-full h-8 risk-meter-bg border-2 border-deep-blue relative overflow-hidden">
-                <div class="absolute top-0 right-0 h-full w-[15%] bg-white/20"></div>
-                <div class="absolute top-0 left-[85%] h-full w-1 bg-deep-blue z-10"></div>
-              </div>
-              <p class="text-[9px] font-bold uppercase mt-2 text-dark-gray">* Cálculo basado en la "Regla del 1:1"
-                modificada a conveniencia.</p>
-            </div>
-            <div class="bg-light-gray bureaucratic-border p-4 mt-2">
-              <p class="text-[10px] font-black uppercase mb-2 flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">gavel</span> RECOMENDACIÓN CONTABLE:
-              </p>
-              <p class="text-xs font-bold italic leading-tight">
-                "Si vendemos los derechos de explotación de la cafetería de los juveniles a una empresa de las Islas
-                Caimán, el balance cuadra hasta el martes."
-              </p>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
+      <div class="footer-meta">
+        <p>&#169; 2026 TEBASAENTERAR · Registro de Activos Hipotecados</p>
+        <p>Expediente 2024/FFP · Subdirección General de Hipotecas Deportivas</p>
+      </div>
+    </footer>
   </main>
-  <div class="ticker-wrap">
-    <div class="ticker">
-      <span class="mx-6 font-black uppercase text-bright-blue">[ACTUALIZACIÓN]</span> LOS INTERESES DE DEMORA SUBEN UN
-      2% MIENTRAS LEES ESTO...
-      <span class="mx-6 font-black uppercase text-bright-blue">[AVISO]</span> EL PRESIDENTE HA SIDO VISTO COMPRANDO UN
-      BILLETE SOLO IDA A PANAMÁ...
-      <span class="mx-6 font-black uppercase text-bright-blue">[PALANCA]</span> SE ALQUILA EL ESTADIO PARA COMUNIONES Y
-      BODAS DE DESTINO...
-      <span class="mx-6 font-black uppercase text-bright-blue">[CVC]</span> FIRMA AQUÍ Y RECIBE UNA FOTO FIRMADA Y 50
-      AÑOS DE HIPOTECA...
-      <span class="mx-6 font-black uppercase text-bright-blue">[AUDITORÍA]</span> EL NIVEL DE CREATIVIDAD CONTABLE HA
-      SUPERADO A PICASSO...
-    </div>
-  </div>
-</body>
 
+</body>
 </html>

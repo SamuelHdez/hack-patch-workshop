@@ -1,100 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Carrito</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="../static/styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tebasaenterar — Mi Carrito</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <style>
+    /* Hallmark · genre: playful · macrostructure: (utility cart page)
+     * theme: adapted-Hum (brand-anchored) · nav: N1b · footer: Ft2
+     * contrast: pass (40-41) · tokens: pass (48) · mobile: pass (34,49-57)
+     */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: clip; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* nav: ver /static/css/nav.css */
+
+    /* ─── Main ─── */
+    .cart-main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: var(--space-2xl) var(--space-xl);
+    }
+    .cart-header {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 3px solid var(--color-ink);
+    }
+    .cart-header__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-ink-2);
+      margin-bottom: var(--space-sm);
+    }
+    .cart-header__title {
+      font-family: var(--font-display);
+      font-size: var(--text-display-s);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      line-height: 1.0;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+
+    /* Cart content container — JS injects here */
+    #carrito-info {}
+
+    /* Cart table styles (injected by JS) */
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 2px solid var(--color-ink);
+      margin-bottom: var(--space-xl);
+      font-family: var(--font-mono);
+    }
+    .cart-table th {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+      padding: var(--space-md) var(--space-lg);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      text-align: left;
+    }
+    .cart-table td {
+      padding: var(--space-md) var(--space-lg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+    .cart-table tr:last-child td { border-bottom: none; }
+    .cart-table tr:nth-child(even) td { background-color: var(--color-paper-2); }
+
+    /* Evento resumen (injected by JS) */
+    .evento-resumen {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: flex-start;
+      margin: var(--space-xl) 0;
+      padding: var(--space-xl);
+      border: 2px solid var(--color-ink);
+      background-color: var(--color-paper-2);
+    }
+    .evento-resumen img {
+      width: 120px;
+      height: auto;
+      border: 2px solid var(--color-ink);
+      filter: grayscale(100%);
+      flex-shrink: 0;
+    }
+    .evento-resumen h4 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .evento-resumen div div {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-ink-2);
+      margin-top: 4px;
+    }
+
+    /* Section headings injected by JS */
+    #carrito-info h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-lg);
+      margin-top: var(--space-2xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    #carrito-info h3:first-child { margin-top: 0; }
+
+    /* Error/success states */
+    .cart-error {
+      padding: var(--space-lg);
+      background-color: oklch(95% 0.04 30);
+      border: 2px solid var(--color-alert);
+      color: oklch(30% 0.08 30);
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+    }
+
+    /* ─── Footer Ft2 inline ─── */
+    .site-footer {
+      border-top: 3px solid var(--color-ink);
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-ink-3);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .footer-text a {
+      color: var(--color-ink-2);
+      text-decoration: none;
+      transition: color var(--dur-micro) var(--ease-out);
+    }
+    .footer-text a:hover { color: var(--color-accent); }
+    .footer-text a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 60rem) {
+      .nav-inner  { padding: 0 var(--space-lg); }
+      .cart-main  { padding: var(--space-xl) var(--space-lg); }
+    }
+    @media (max-width: 40rem) {
+      .nav-inner  { padding: 0 var(--space-md); }
+      .cart-main  { padding: var(--space-xl) var(--space-md); }
+      .cart-header__title { font-size: var(--text-4xl); }
+      .evento-resumen { flex-direction: column; }
+      .evento-resumen img { width: 100%; max-width: 200px; }
+      .site-footer { padding: var(--space-md); flex-direction: column; align-items: flex-start; }
+      .cart-table { font-size: var(--text-xs); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 150ms !important; }
+    }
+  </style>
 </head>
-
 <body>
-    <header>
-        <a href="/">
-            <div class="logo">
-                <svg class="sc-d4f663ea-0 gQjdxW" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 135 24" fill="#fff" height="100%">
-                    <path
-                        d="M41.57 6.27c-4.02 0-6.97 3.63-6.97 7.4 0 3.62 2.38 5.32 5.9 5.32 1.3 0 2.66-.3 3.9-.68l.4-2.5a8.98 8.98 0 0 1-3.75.86c-2.04 0-3.23-.71-3.39-2.62l-.02-.34v-.1a6.46 6.46 0 0 1 .52-2.41c.61-1.55 1.48-2.62 3.36-2.62 1.33 0 2.02.73 2.02 2.03 0 .28-.02.54-.07.83H39.1a7.57 7.57 0 0 0-.34 2.17h7.5c.2-.9.32-1.8.32-2.72 0-3.09-2-4.62-5.02-4.62zm-5.4.28h-4.15l-4.44 4.41h-.05L29.65 1h-3.19l-3.78 17.7h3.11l1.38-6.44h.05l3.16 6.45h3.6l-3.7-6.62 5.88-5.54zm15.16 8.8a5 5 0 0 1 .15-1.18l1.16-5.3h2.86l.5-2.32h-2.86l.79-3.61-3.42 1.1-.55 2.5h-2.3l-.51 2.32h2.3l-.9 4.11c-.2.97-.4 1.89-.4 2.83 0 2.34 1.52 3.2 3.69 3.2.54 0 1.16-.18 1.7-.3l.56-2.45a4.28 4.28 0 0 1-1.55.28c-.72 0-1.22-.44-1.22-1.18zm-47.14 0c0-.47.07-.9.14-1.18l1.16-5.3h2.86l.5-2.32H5.99l.79-3.61-3.43 1.1-.54 2.5H.5L0 8.87h2.3l-.9 4.11c-.21.97-.4 1.89-.4 2.83C1 18.14 2.52 19 4.69 19c.54 0 1.16-.18 1.7-.3l.56-2.45a4.27 4.27 0 0 1-1.55.28c-.71 0-1.22-.44-1.22-1.18zm12.48-1.98c0-2.29 1.42-4.65 3.97-4.65.88 0 1.7.21 2.33.62l.78-2.6a11.4 11.4 0 0 0-3.19-.47c-4.4 0-7.22 3.23-7.22 7.48 0 3.14 2.04 5.24 5.2 5.24 1.05 0 2.1-.1 3.07-.57l.36-2.5c-.83.4-1.81.61-2.6.61-2.18 0-2.7-1.58-2.7-3.16zM14.5 1.31h-3.19l-.67 3.02h3.2l.66-3.02zm-4.36 5.24L7.54 18.7h3.19l2.61-12.16h-3.19zm72.06-.27c-1.43 0-2.81.26-4.17.73l-.45 2.53a9.48 9.48 0 0 1 4.02-.95c1.12 0 2.45.35 2.45 1.58 0 .36 0 .71-.1 1.04h-1.11c-3 0-7.52.3-7.52 4.32 0 2.24 1.57 3.47 3.78 3.47 1.76 0 2.86-.78 3.95-2.15h.05l-.33 1.87h2.68c.29-2.3 1.5-7.06 1.5-8.7 0-2.85-2.3-3.74-4.75-3.74zM80 16.68c-.82 0-1.62-.42-1.62-1.27 0-2.05 2.56-2.31 4.1-2.31h1.13c-.5 1.96-1.24 3.58-3.61 3.58zM71.6 6.27c-1.72 0-3.5.73-4.31 2.31h-.05c-.17-1.47-1.67-2.31-3.12-2.31-1.5 0-2.9.66-3.75 1.9h-.05l.29-1.62h-2.98l-.26 1.35-2.23 10.8h3.18l1.26-5.78c.4-1.63 1-4.2 3.16-4.2.82 0 1.5.57 1.5 1.46 0 .74-.23 1.87-.4 2.6l-1.28 5.93h3.18L67 12.92c.4-1.65.95-4.2 3.17-4.2.8 0 1.5.57 1.5 1.46 0 .74-.24 1.87-.4 2.6l-1.3 5.93h3.2l1.27-5.81c.27-1 .55-2.22.55-3.3a3.4 3.4 0 0 0-3.4-3.33zm41.24 0c-4.02 0-6.97 3.63-6.97 7.4 0 3.62 2.38 5.32 5.9 5.32 1.3 0 2.66-.3 3.9-.68l.4-2.5a9 9 0 0 1-3.75.86c-2.04 0-3.23-.71-3.38-2.62-.01-.12-.03-.22-.03-.34v-.1c.02-.84.2-1.66.53-2.41.6-1.55 1.47-2.62 3.35-2.62 1.33 0 2.02.73 2.02 2.03 0 .28-.02.54-.07.83h-4.36a7.57 7.57 0 0 0-.34 2.17h7.5c.2-.9.32-1.8.32-2.72 0-3.09-2-4.62-5.02-4.62zm10.18 2.57h-.05l.43-2.3h-3.05l-.28 1.64-2.19 10.53h3.19l1.14-5.46c.4-1.96 1.5-3.96 3.76-3.96.4 0 .85.07 1.2.19l.68-3.1a4.9 4.9 0 0 0-1.22-.11c-1.47 0-3.04 1.25-3.61 2.57zm-20.87 6.51c0-.47.07-.9.14-1.18l1.17-5.3h2.85l.5-2.32h-2.85l.78-3.61-3.42 1.1-.55 2.5h-2.3l-.5 2.32h2.3l-.9 4.11c-.22.97-.4 1.89-.4 2.83 0 2.34 1.52 3.2 3.68 3.2.55 0 1.17-.18 1.71-.3l.55-2.45c-.4.17-.98.28-1.55.28-.71 0-1.21-.44-1.21-1.18zm-13.31-5.21c0 3.04 4.13 3.23 4.13 5.2 0 .98-1.12 1.33-2.19 1.33a6.01 6.01 0 0 1-3.04-.94l-.7 2.53a8.8 8.8 0 0 0 3.74.73c2.74 0 5.52-.95 5.52-4.1 0-2.98-4.14-3.55-4.14-5.08 0-.97 1.19-1.23 2.14-1.23.9 0 1.79.26 2.13.44l.69-2.38a13.27 13.27 0 0 0-2.98-.37c-2.53 0-5.3 1.01-5.3 3.87zm43.23-3.86A2.74 2.74 0 0 0 129.33 9c0 1.5 1.23 2.72 2.74 2.72A2.73 2.73 0 0 0 134.81 9c0-1.5-1.23-2.72-2.74-2.72zm.01 5.04A2.23 2.23 0 0 1 129.86 9c0-1.3.95-2.31 2.22-2.31 1.26 0 2.21 1.01 2.21 2.31s-.95 2.32-2.2 2.32zm1.28-3.02c0-.6-.36-.9-1.1-.9h-1.23v3.2h.52V9.17h.44l.9 1.41h.55l-.91-1.4c.5 0 .83-.38.83-.89zm-1.81.48V7.8h.62c.34 0 .66.1.66.47 0 .41-.26.5-.66.5h-.62z">
-                    </path>
-                </svg>
-            </div>
-        </a>
-        <div class="flex-1">
-        </div>
 
-        </div>
-        <span class="user-info">
-            {% if user %}
-            <a href="/dashboard">{{ user }}</a>
-            {% else %}
-            <a href="/login">Iniciar sesión</a>
-            {% endif %}
-        </span>
-    </header>
-    <main class="dashboard">
-        <div id="carrito-info"></div>
-    </main>
-    <script>
-        function cargarCarrito() {
-            fetch('/load_cart')
-                .then(res => res.text())
-                .then(texto => {
-                    const carritoDiv = document.getElementById('carrito-info');
-                    if (texto.startsWith("Error")) {
-                        carritoDiv.innerHTML = `<p style="color:red">${texto}</p>`;
-                        return;
-                    }
-                    let cart = {};
-                    try {
-                        cart = eval('(' + texto + ')');
-                    } catch (e) {
-                        carritoDiv.innerHTML = '<p style="color:red">Error al analizar el carrito</p>';
-                        return;
-                    }
-                    // Ahora carga eventos.json para buscar el evento
-                    fetch('/static/events.json')
-                        .then(res => res.json())
-                        .then(eventos => {
-                            const evento = eventos.find(ev => String(ev.id) === String(cart.eventId));
-                            if (!evento) {
-                                carritoDiv.innerHTML = `<p>🛒 Carrito cargado, pero no se encontró información del evento.</p>`;
-                                return;
-                            }
-                            // Muestra carrito + evento
-                            carritoDiv.innerHTML = `
-              <h3>🛒 Tu carrito</h3>
-              <table class="cart-table">
-                <tr><th>Campo</th><th>Valor</th></tr>
-                <tr><td>Nombre</td><td>${cart.nombre}</td></tr>
-                <tr><td>Email</td><td>${cart.email}</td></tr>
-                <tr><td>Cantidad</td><td>${cart.cantidad}</td></tr>
-                <tr><td>Zona</td><td>${cart.zona}</td></tr>
-              </table>
-              <h3>🎟️ Información del evento</h3>
-              <div class="evento-resumen" style="display:flex; gap: 18px; align-items: center; margin: 18px 0;">
-                <img src="${evento.img}" alt="${evento.alt || evento.title}" style="width:120px; border-radius:8px;">
-                <div>
-                  <h4 style="margin:0 0 4px 0">${evento.title}</h4>
-                  <div><strong>Fecha:</strong>${evento.date || ''} ${evento.time ? ('· ' + evento.time) : ''}</div>
-                  <div><strong>Ciudad:</strong> ${evento.city || ''}</div>
-                  <div><strong>Lugar:</strong> ${evento.venue || ''}</div>
-                </div>
-              </div>
-            `;
-                        })
-                        .catch(() => {
-                            carritoDiv.innerHTML = `<p>🛒 Carrito cargado, pero no se pudo cargar la info del evento.</p>`;
-                        });
-                })
-                .catch(() => {
-                    document.getElementById('carrito-info').innerHTML = '<p style="color:red">Error al cargar carrito</p>';
-                });
-        }
+  {% include 'partials/nav.html' %}
 
-        window.addEventListener('DOMContentLoaded', cargarCarrito);
-    </script>
+  <!-- Main -->
+  <main class="cart-main">
+    <div class="cart-header">
+      <p class="cart-header__eyebrow">Resumen de compra · Circular 44/2024</p>
+      <h1 class="cart-header__title">Mi&nbsp;Carrito</h1>
+    </div>
+    <div id="carrito-info" role="region" aria-live="polite" aria-label="Contenido del carrito"></div>
+  </main>
+
+  <!-- Footer Ft2 inline -->
+  <footer class="site-footer">
+    <p class="footer-text">&#169; 2026 <a href="/">Tebasaenterar</a> · Todos los derechos vendidos</p>
+    <p class="footer-text">Circular 44/2024 · <a href="/marketplace">Volver al Mercado</a></p>
+  </footer>
+
+  <script>
+    function cargarCarrito() {
+      fetch('/load_cart')
+        .then(res => res.text())
+        .then(texto => {
+          const carritoDiv = document.getElementById('carrito-info');
+          if (texto.startsWith("Error")) {
+            carritoDiv.innerHTML = '<p class="cart-error">' + texto + '</p>';
+            return;
+          }
+          let cart = {};
+          try {
+            cart = eval('(' + texto + ')');
+          } catch (e) {
+            carritoDiv.innerHTML = '<p class="cart-error">Error al analizar el carrito</p>';
+            return;
+          }
+          fetch('/static/events.json')
+            .then(res => res.json())
+            .then(eventos => {
+              const evento = eventos.find(ev => String(ev.id) === String(cart.eventId));
+              if (!evento) {
+                carritoDiv.innerHTML = '<p>Carrito cargado, pero no se encontró información del evento.</p>';
+                return;
+              }
+              carritoDiv.innerHTML =
+                '<h3><span class="material-symbols-outlined" aria-hidden="true" style="font-size:1em;line-height:1">shopping_cart</span> Tu carrito</h3>' +
+                '<table class="cart-table">' +
+                '<thead><tr><th>Campo</th><th>Valor</th></tr></thead>' +
+                '<tbody>' +
+                '<tr><td>Nombre</td><td>' + cart.nombre + '</td></tr>' +
+                '<tr><td>Email</td><td>' + cart.email + '</td></tr>' +
+                '<tr><td>Cantidad</td><td>' + cart.cantidad + '</td></tr>' +
+                '<tr><td>Zona</td><td>' + cart.zona + '</td></tr>' +
+                '</tbody>' +
+                '</table>' +
+                '<h3><span class="material-symbols-outlined" aria-hidden="true" style="font-size:1em;line-height:1">confirmation_number</span> Información del Evento</h3>' +
+                '<div class="evento-resumen">' +
+                '<img src="' + evento.img + '" alt="' + (evento.alt || evento.title) + '">' +
+                '<div>' +
+                '<h4>' + evento.title + '</h4>' +
+                '<div><strong>Fecha:</strong> ' + (evento.date || '') + (evento.time ? ' · ' + evento.time : '') + '</div>' +
+                '<div><strong>Ciudad:</strong> ' + (evento.city || '') + '</div>' +
+                '<div><strong>Lugar:</strong> ' + (evento.venue || '') + '</div>' +
+                '</div>' +
+                '</div>';
+            })
+            .catch(() => {
+              carritoDiv.innerHTML = '<p>Carrito cargado, pero no se pudo cargar la info del evento.</p>';
+            });
+        })
+        .catch(() => {
+          document.getElementById('carrito-info').innerHTML = '<p class="cart-error">Error al cargar carrito</p>';
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', cargarCarrito);
+  </script>
 
 </body>
-
 </html>
