@@ -192,7 +192,7 @@ def admin():
 def marketplace():
     user = request.cookies.get('user')
     db = get_db()
-    products = db.execute('SELECT * FROM products ORDER BY price DESC').fetchall()
+    products = db.execute('SELECT * FROM products WHERE enabled = 1 ORDER BY price DESC').fetchall()
     
     return render_template('marketplace.html', user=user, products=products)
 
