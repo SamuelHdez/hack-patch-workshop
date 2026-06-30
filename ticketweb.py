@@ -49,7 +49,7 @@ def internal_lfi():
             content = f.read()
  
         # Limitar el tamaño para evitar respuestas enormes
-        return requests.Response(content, mimetype='text/plain')
+        return content, 200, {'Content-Type': 'text/plain; charset=utf-8'}
     except Exception as e:
         return f"❌ Error leyendo el archivo: {e}", 500       
 
